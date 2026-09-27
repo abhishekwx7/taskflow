@@ -123,8 +123,6 @@ export async function getTasks(projectId: string, userId: string, query: TaskQue
                 })
 
             })
-
-
         },
         include: {
             labels: true,

@@ -5,10 +5,19 @@ interface getTaskResponse {
     tasks: Task[];
 }
 
+export type TaskSort =
+    | "newest"
+    | "oldest"
+    | "dueDateAsc"
+    | "dueDateDesc"
+    | "nameAsc"
+    | "nameDesc";
+
 export interface GetTasksQuery {
     search?: string;
     status?: "all" | "pending" | "completed";
     labels?: string;
+    sort?: TaskSort;
 }
 
 export async function getTasks(projectId: string, query?: GetTasksQuery) {

@@ -8,6 +8,7 @@ import {
   getTasks,
   updateTask,
   type CreateTaskInput,
+  type TaskSort,
 } from "../services/task.service";
 
 import type { Task } from "../types/task";
@@ -34,6 +35,8 @@ export default function ProjectPage() {
   const [isLabelFilterOpen, setIsLabelFilterOpen] = useState(false);
 
   const [status, setStatus] = useState<"all" | "pending" | "completed">("all");
+
+  const [sort, setSort] = useState<TaskSort>("newest");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,6 +67,7 @@ export default function ProjectPage() {
                 search: debouncedSearch || undefined,
                 status,
               }),
+          sort,
         });
 
         setTasks(data);

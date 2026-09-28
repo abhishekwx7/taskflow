@@ -37,6 +37,7 @@ export default function ProjectPage() {
   const [status, setStatus] = useState<"all" | "pending" | "completed">("all");
 
   const [sort, setSort] = useState<TaskSort>("newest");
+  const [isSortOpen, setIsSortOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -88,7 +89,7 @@ export default function ProjectPage() {
     }
 
     fetchTasks();
-  }, [projectId, debouncedSearch, status, selectedLabelIds]);
+  }, [projectId, debouncedSearch, status, selectedLabelIds, sort]);
 
   function handleToggleFilterLabel(labelId: string) {
     setSearch("");
@@ -435,46 +436,110 @@ export default function ProjectPage() {
             {isCreating ? "Creating..." : "Add Task"}
           </button>
         </form>
-        <div className="mb-4 flex gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedLabelsIds([]);
-              setStatus("all");
-            }}
-            className="rounded border px-3 py-2"
-          >
-            All
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedLabelsIds([]);
-              setStatus("pending");
-            }}
-            className="rounded border px-3 py-2 bg-yellow-300"
-          >
-            Pending
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedLabelsIds([]);
-              setStatus("completed");
-            }}
-            className="rounded border px-3 py-2 bg-green-300"
-          >
-            Completed
-          </button>
+        <div className="mb-4 flex justify-between">
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedLabelsIds([]);
+                setStatus("all");
+              }}
+              className="rounded border px-3 py-2"
+            >
+              All
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedLabelsIds([]);
+                setStatus("pending");
+              }}
+              className="rounded border px-3 py-2 bg-yellow-300"
+            >
+              Pending
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedLabelsIds([]);
+                setStatus("completed");
+              }}
+              className="rounded border px-3 py-2 bg-green-300"
+            >
+              Completed
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setIsLabelFilterOpen((prev) => !prev)}
-            className="rounded border px-3 py-2 bg-gray-500"
-          >
-            Filter by labels
-            {selectedLabelIds.length > 0 && ` (${selectedLabelIds.length})`}
-          </button>
+            <button
+              type="button"
+              onClick={() => setIsLabelFilterOpen((prev) => !prev)}
+              className="rounded border px-3 py-2 bg-gray-500"
+            >
+              Filter by labels
+              {selectedLabelIds.length > 0 && ` (${selectedLabelIds.length})`}
+            </button>
+          </div>
+
+          <div className="relative">
+            <button
+              type="button"
+              className="rounded border-amber-200 px-3 py-2 bg-amber-800"
+              onClick={() => setIsSortOpen((prev) => !prev)}
+            >
+              Sort
+            </button>
+
+            {isSortOpen && (
+              <div className="absolute right-0 mt-2 w-32 rounded-lg border bg-white shadow-lg z-10 text-center">
+                <button
+                  type="button"
+                  onClick={() => setSort("oldest")}
+                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                >
+                  Newest
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSort("oldest")}
+                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                >
+                  Oldest
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSort("dueDateAsc")}
+                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                >
+                  Due date: earliest
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSort("dueDateDesc")}
+                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                >
+                  Due date: latest
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSort("nameAsc")}
+                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                >
+                  Name A-Z
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSort("nameDesc")}
+                  className="block w-full hover:bg-gray-300"
+                >
+                  Name Z-A
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {isLabelFilterOpen && (

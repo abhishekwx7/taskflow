@@ -492,7 +492,10 @@ export default function ProjectPage() {
               <div className="absolute right-0 mt-2 w-32 rounded-lg border bg-white shadow-lg z-10 text-center">
                 <button
                   type="button"
-                  onClick={() => setSort("oldest")}
+                  onClick={() => {
+                    setSort("newest");
+                    setIsSortOpen(false);
+                  }}
                   className="block w-full border-b px-3 py-2 hover:bg-gray-300"
                 >
                   Newest
@@ -500,7 +503,10 @@ export default function ProjectPage() {
 
                 <button
                   type="button"
-                  onClick={() => setSort("oldest")}
+                  onClick={() => {
+                    setSort("oldest");
+                    setIsSortOpen(false);
+                  }}
                   className="block w-full border-b px-3 py-2 hover:bg-gray-300"
                 >
                   Oldest
@@ -508,7 +514,10 @@ export default function ProjectPage() {
 
                 <button
                   type="button"
-                  onClick={() => setSort("dueDateAsc")}
+                  onClick={() => {
+                    setSort("dueDateAsc");
+                    setIsSortOpen(false);
+                  }}
                   className="block w-full border-b px-3 py-2 hover:bg-gray-300"
                 >
                   Due date: earliest
@@ -516,7 +525,10 @@ export default function ProjectPage() {
 
                 <button
                   type="button"
-                  onClick={() => setSort("dueDateDesc")}
+                  onClick={() => {
+                    setSort("dueDateDesc");
+                    setIsSortOpen(false);
+                  }}
                   className="block w-full border-b px-3 py-2 hover:bg-gray-300"
                 >
                   Due date: latest
@@ -524,7 +536,9 @@ export default function ProjectPage() {
 
                 <button
                   type="button"
-                  onClick={() => setSort("nameAsc")}
+                  onClick={() => {
+                    setIsSortOpen(false);
+                  }}
                   className="block w-full border-b px-3 py-2 hover:bg-gray-300"
                 >
                   Name A-Z
@@ -532,7 +546,10 @@ export default function ProjectPage() {
 
                 <button
                   type="button"
-                  onClick={() => setSort("nameDesc")}
+                  onClick={() => {
+                    setSort("nameDesc");
+                    setIsSortOpen(false);
+                  }}
                   className="block w-full hover:bg-gray-300"
                 >
                   Name Z-A

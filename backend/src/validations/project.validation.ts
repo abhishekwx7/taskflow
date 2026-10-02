@@ -12,5 +12,10 @@ export const updateProjectSchema = z.object({
     message: "Nothing to update",
 })
 
+export const projectQuerySchema = z.object({
+    search: z.string().trim().max(100, "Search query is too long").optional(),
+})
+
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
+export type projectQueryInput = z.infer<typeof projectQuerySchema>;

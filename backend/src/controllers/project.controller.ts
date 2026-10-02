@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware.js";
 import * as projectService from "../services/project.service.js";
-import { createProjectSchema, updateProjectSchema } from "../validations/project.validation.js"
+import { createProjectSchema, projectQuerySchema, updateProjectSchema } from "../validations/project.validation.js"
 
 export async function createProject(
     req: AuthRequest,
@@ -53,12 +53,22 @@ export async function getProjects(
             });
         }
 
+        const result = projectQuerySchema.safeParse(req.query);
+
+        if (!result.success) {
+            return res.status(400).json({
+                message: "Invalid query parameters!",
+                errors: result.error.flatten()
+            })
+        }
+
         const projects = await projectService.getProjects(
             req.userId,
+            result.data,
         );
 
         return res.status(200).json({
-            projects
+            projects,
         })
     } catch (error) {
         console.log(error);

@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.js";
-import type { CreateProjectInput, UpdateProjectInput } from "../validations/project.validation.js";
+import type { CreateProjectInput, UpdateProjectInput, projectQueryInput } from "../validations/project.validation.js";
 
 export async function createProject(
     data: CreateProjectInput,
@@ -15,10 +15,19 @@ export async function createProject(
     return project;
 }
 
-export async function getProjects(userId: string) {
+export async function getProjects(userId: string, query: projectQueryInput) {
+    const { search } = query;
+
     return await prisma.project.findMany({
         where: {
-            userId
+            userId,
+
+            ...(search && {
+                name: {
+                    contains: search,
+                    mode: "insensitive",
+                },
+            }),
         },
         orderBy: {
             createdAt: "desc"

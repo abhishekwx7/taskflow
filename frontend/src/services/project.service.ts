@@ -8,8 +8,14 @@ import type {
     DeleteProjectResponse,
 } from "../types/projects";
 
-export async function getProjects() {
-    const response = await api.get<ProjectsResponse>("/projects");
+export interface GetProjectsQuery {
+    search?: string;
+}
+
+export async function getProjects(query?: GetProjectsQuery) {
+    const response = await api.get<ProjectsResponse>("/projects", {
+        params: query,
+    });
 
     return response.data.projects;
 }

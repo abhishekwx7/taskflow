@@ -16,16 +16,31 @@ export default function Dashboard() {
   const [projectName, setProjectName] = useState("");
   const [projectColor, setProjectColor] = useState("");
 
+  const [projectSearch, setProjectSearch] = useState("");
+  const [debouncedProjectSearch, setDebouncedProjectSearch] = useState("");
+
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedProjectSearch(projectSearch.trim());
+    }, 1500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [projectSearch]);
 
   useEffect(() => {
     async function fetchProjects() {
       try {
         setError("");
 
-        const data = await getProjects();
+        const data = await getProjects({
+          search: debouncedProjectSearch,
+        });
 
         setProjects(data);
       } catch (error) {
@@ -45,7 +60,7 @@ export default function Dashboard() {
     }
 
     fetchProjects();
-  }, []);
+  }, [debouncedProjectSearch]);
 
   async function handleCreateProject(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -112,6 +127,16 @@ export default function Dashboard() {
       <main className="mx-auto max-w-5xl px-6 py-8">
         <div className="mb-8">
           <h2 className="mb-4 text-2xl font-bold">Projects</h2>
+
+          <input
+            type="text"
+            value={projectSearch}
+            onChange={(e) => {
+              setProjectSearch(e.target.value);
+            }}
+            placeholder="Search Projects..."
+            className="mb-4 rounded-lg w-full border bg-white px-3 py-2"
+          />
 
           <form
             onSubmit={handleCreateProject}

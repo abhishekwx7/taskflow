@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 import { createProject, getProjects } from "../services/project.service";
+import { getTasks } from "../services/task.service";
+import type { Task } from "../types/task";
 
 import type { CreateProjectInput, Project } from "../types/projects";
 
@@ -18,6 +20,8 @@ export default function Dashboard() {
 
   const [projectSearch, setProjectSearch] = useState("");
   const [debouncedProjectSearch, setDebouncedProjectSearch] = useState("");
+
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);

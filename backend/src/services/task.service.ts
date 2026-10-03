@@ -152,6 +152,22 @@ export async function getTaskById(taskId: string, userId: string) {
     return task;
 }
 
+export async function getAllTasks(userId: string) {
+    return await prisma.task.findMany({
+        where: {
+            project: {
+                userId,
+            },
+        },
+        include: {
+            labels: true,
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+}
+
 export async function updateTask(taskId: string, data: UpdateTaskInput, userId: string) {
     const task = await prisma.task.findFirst({
         where: {

@@ -152,6 +152,33 @@ export async function getTask(
     }
 }
 
+export async function getAllTasks(
+    req: AuthRequest,
+    res: Response,
+) {
+    try {
+        if (!req.userId) {
+            return res.status(401).json({
+                message: "Unauthorized!",
+            });
+        }
+
+        const tasks = await taskService.getAllTasks(
+            req.userId,
+        );
+
+        return res.status(200).json({
+            tasks,
+        });
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: "Failed to fetch tasks",
+        });
+    }
+}
+
 export async function updateTask(
     req: AuthRequest,
     res: Response,

@@ -175,13 +175,17 @@ export async function getAllTasks(userId: string) {
     });
 }
 
-export async function updateTask(taskId: string, data: UpdateTaskInput, userId: string) {
+export async function updateTask(
+    taskId: string,
+    data: UpdateTaskInput,
+    userId: string
+) {
     const task = await prisma.task.findFirst({
         where: {
             id: taskId,
             project: {
                 userId,
-            }
+            },
         },
     });
 
@@ -196,7 +200,14 @@ export async function updateTask(taskId: string, data: UpdateTaskInput, userId: 
         data,
         include: {
             labels: true,
-        }
+            project: {
+                select: {
+                    id: true,
+                    name: true,
+                    color: true,
+                },
+            },
+        },
     });
 }
 

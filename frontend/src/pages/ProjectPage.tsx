@@ -729,7 +729,7 @@ export default function ProjectPage() {
                 <button
                   onClick={handleDeleteTask}
                   disabled={isDeleting}
-                  className="rounded bg-red-600 px-4 py-2 text-shite disabled:opacity-50"
+                  className="rounded bg-red-600 px-4 py-2 text-white disabled:opacity-50"
                 >
                   {isDeleting ? "Deleting..." : "Delete"}
                 </button>
@@ -764,7 +764,7 @@ export default function ProjectPage() {
                 </label>
 
                 <input
-                  type="text"
+                  type="date"
                   value={editDueDate}
                   onChange={(e) => setEditDueDate(e.target.value)}
                   className="w-full rounded border px-3 py-2"

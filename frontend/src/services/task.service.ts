@@ -1,11 +1,7 @@
 import api from "../lib/api";
 import type { Task } from "../types/task";
 
-interface getTaskResponse {
-    tasks: Task[];
-}
-
-interface GetAllTasksResponse {
+interface TasksResponse {
     tasks: Task[];
 }
 
@@ -24,18 +20,23 @@ export interface GetTasksQuery {
     sort?: TaskSort;
 }
 
-export async function getTasks(projectId: string, query?: GetTasksQuery) {
-    const response = await api.get<getTaskResponse>(
-        `projects/${projectId}/tasks`, {
-        params: query,
-    }
+export async function getTasks(
+    projectId: string,
+    query?: GetTasksQuery
+) {
+    const response = await api.get<TasksResponse>(
+        `projects/${projectId}/tasks`,
+        {
+            params: query,
+        }
     );
 
     return response.data.tasks;
 }
 
 export async function getAllTasks() {
-    const response = await api.get<GetAllTasksResponse>("/tasks");
+    const response =
+        await api.get<TasksResponse>("/tasks");
 
     return response.data.tasks;
 }

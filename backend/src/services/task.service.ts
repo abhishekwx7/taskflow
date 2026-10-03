@@ -161,6 +161,13 @@ export async function getAllTasks(userId: string) {
         },
         include: {
             labels: true,
+            project: {
+                select: {
+                    id: true,
+                    name: true,
+                    color: true,
+                },
+            },
         },
         orderBy: {
             createdAt: "desc",

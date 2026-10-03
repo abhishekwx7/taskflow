@@ -91,6 +91,7 @@ export default function Dashboard() {
 
     fetchTasks();
   }, []);
+
   async function handleCreateProject(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -150,8 +151,10 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-100">
       <div className="flex min-h-screen">
         {/* SIDEBAR */}
+
         <aside className="flex w-64 flex-col border-r bg-white">
           {/* Logo */}
+
           <div className="border-b px-6 py-5">
             <h1 className="text-xl font-bold text-gray-900">TaskFlow</h1>
 
@@ -159,12 +162,16 @@ export default function Dashboard() {
               <p className="mt-1 text-sm text-gray-500">Welcome, {user.name}</p>
             )}
           </div>
+
           {/* Navigation */}
+
           <nav className="flex-1 px-3 py-6">
             <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
               WorkSpace
             </p>
+
             {/* Dashboard */}
+
             <button
               onClick={() => navigate("/")}
               className="mb-1 flex w-full items-center gap-3 rounded-lg bg-gray-100 px-3 py-2.5 text-sm font-medium text-gray-900"
@@ -172,6 +179,7 @@ export default function Dashboard() {
               <span>▦</span>
               Dashboard
             </button>
+
             {/* Tasks */}
             <button
               onClick={() => navigate("/tasks")}
@@ -183,6 +191,7 @@ export default function Dashboard() {
           </nav>
 
           {/* Logout */}
+
           <div className="border-t p-3">
             <button
               onClick={logout}
@@ -195,8 +204,10 @@ export default function Dashboard() {
         </aside>
 
         {/* MAIN CONTENT */}
+
         <main className="flex-1">
           {/* Top Header */}
+
           <header className="border-b bg-white">
             <div className="px-8 py-5">
               <h2 className="text-2xl font-bold text-gray-900">
@@ -210,8 +221,10 @@ export default function Dashboard() {
           </header>
 
           {/* Page Content */}
+
           <div className="mx-auto max-w-6xl px-8 py-8">
             {/* Dashboard Stats */}
+
             <div className="mb-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               <div className="rounded-xl border bg-white p-5 shadow-sm">
                 <p className="text-sm font-medium text-gray-500">Projects</p>
@@ -239,6 +252,7 @@ export default function Dashboard() {
             </div>
 
             {/* PROJECTS */}
+
             <section>
               <div className="mb-5 flex items-center justify-between">
                 <div>
@@ -252,6 +266,7 @@ export default function Dashboard() {
               </div>
 
               {/* Search */}
+
               <input
                 type="text"
                 value={projectSearch}
@@ -263,6 +278,7 @@ export default function Dashboard() {
               />
 
               {/* Create Project */}
+
               <form
                 onSubmit={handleCreateProject}
                 className="mb-8 flex flex-col gap-3 rounded-xl border bg-white p-4 shadow-sm sm:flex-row"
@@ -296,6 +312,7 @@ export default function Dashboard() {
               </form>
 
               {/* Error */}
+
               {error && (
                 <p className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-red-600">
                   {error}
@@ -303,6 +320,7 @@ export default function Dashboard() {
               )}
 
               {/* Projects */}
+
               {isLoading ? (
                 <p className="text-sm text-gray-500">Loading projects...</p>
               ) : projects.length === 0 ? (

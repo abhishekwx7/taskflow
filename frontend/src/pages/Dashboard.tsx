@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 import { createProject, getProjects } from "../services/project.service";
-import { getTasks } from "../services/task.service";
+import { getAllTasks } from "../services/task.service";
 import type { Task } from "../types/task";
 
 import type { CreateProjectInput, Project } from "../types/projects";
@@ -66,6 +66,31 @@ export default function Dashboard() {
     fetchProjects();
   }, [debouncedProjectSearch]);
 
+  // Fetch all tasks once when Dashboard mounts
+  useEffect(() => {
+    async function fetchTasks() {
+      try {
+        setError("");
+
+        const data = await getAllTasks();
+
+        setTasks(data);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const message =
+            error.response?.data?.message ||
+            error.response?.data?.error ||
+            "Failed to fetch tasks";
+
+          setError(message);
+        } else {
+          setError("Something went wrong");
+        }
+      }
+    }
+
+    fetchTasks();
+  }, []);
   async function handleCreateProject(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -105,6 +130,20 @@ export default function Dashboard() {
     } finally {
       setIsCreating(false);
     }
+  }
+
+  const totalTasks = tasks.length;
+
+  const completedTasks = tasks.filter((task) => task.isCompleted).length;
+
+  const currentHour = new Date().getHours();
+
+  let greeting = "Good evening";
+
+  if (currentHour < 12) {
+    greeting = "Good morning";
+  } else if (currentHour < 18) {
+    greeting = "Good afternoon";
   }
 
   return (
@@ -160,10 +199,11 @@ export default function Dashboard() {
           {/* Top Header */}
           <header className="border-b bg-white">
             <div className="px-8 py-5">
-              <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {greeting}, {user?.name} 👋
+              </h2>
 
               <p className="mt-1 text-sm text-gray-500">
-                {" "}
                 Manage your projects and stay organized.
               </p>
             </div>
@@ -171,6 +211,33 @@ export default function Dashboard() {
 
           {/* Page Content */}
           <div className="mx-auto max-w-6xl px-8 py-8">
+            {/* Dashboard Stats */}
+            <div className="mb-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-xl border bg-white p-5 shadow-sm">
+                <p className="text-sm font-medium text-gray-500">Projects</p>
+
+                <p className="mt-2 text-3xl font-bold text-gray-900">
+                  {projects.length}
+                </p>
+              </div>
+
+              <div className="rounded-xl border bg-white p-5 shadow-sm">
+                <p className="text-sm font-medium text-gray-500">Total Tasks</p>
+
+                <p className="mt-2 text-3xl font-bold text-gray-900">
+                  {totalTasks}
+                </p>
+              </div>
+
+              <div className="rounded-xl border bg-white p-5 shadow-sm">
+                <p className="text-sm font-medium text-gray-500">Completed</p>
+
+                <p className="mt-2 text-3xl font-bold text-gray-900">
+                  {completedTasks}
+                </p>
+              </div>
+            </div>
+
             {/* PROJECTS */}
             <section>
               <div className="mb-5 flex items-center justify-between">

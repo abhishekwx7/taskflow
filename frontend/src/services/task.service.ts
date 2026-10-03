@@ -5,6 +5,10 @@ interface getTaskResponse {
     tasks: Task[];
 }
 
+interface GetAllTasksResponse {
+    tasks: Task[];
+}
+
 export type TaskSort =
     | "newest"
     | "oldest"
@@ -26,6 +30,12 @@ export async function getTasks(projectId: string, query?: GetTasksQuery) {
         params: query,
     }
     );
+
+    return response.data.tasks;
+}
+
+export async function getAllTasks() {
+    const response = await api.get<GetAllTasksResponse>("/tasks");
 
     return response.data.tasks;
 }

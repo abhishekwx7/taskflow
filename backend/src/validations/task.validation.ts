@@ -35,6 +35,10 @@ export const taskQuerySchema = z.object({
     labels: z.string().trim().transform((value) => value.split(",").map((id) => id.trim()).filter(Boolean)).optional(),
 
     sort: z.enum(["newest", "oldest", "dueDateAsc", "dueDateDesc", "nameAsc", "nameDesc"]).optional().default("newest"),
+
+    page: z.coerce.number().int().positive().optional().default(1),
+
+    limit: z.coerce.number().int().positive().max(50).optional().default(10),
 })
 
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;

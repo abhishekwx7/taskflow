@@ -163,13 +163,22 @@ export async function getAllTasks(
             });
         }
 
-        const tasks = await taskService.getAllTasks(
+        const result = taskQuerySchema.safeParse(req.query);
+
+        if (!result.success) {
+            return res.status(400).json({
+                message: "Invalid query parameters!",
+                errors: result.error.flatten()
+            })
+        }
+
+        const data = await taskService.getAllTasks(
             req.userId,
+            result.data.page,
+            result.data.limit,
         );
 
-        return res.status(200).json({
-            tasks,
-        });
+        return res.status(200).json(data);
     } catch (error) {
         console.log(error);
 

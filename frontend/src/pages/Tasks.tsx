@@ -5,6 +5,16 @@ import axios from "axios";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  const [page, setPage] = useState(1);
+
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 1,
+  });
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -22,9 +32,10 @@ export default function Tasks() {
         setError("");
         setIsLoading(true);
 
-        const data = await getAllTasks();
+        const data = await getAllTasks(page, 10);
 
-        setTasks(data);
+        setTasks(data.tasks);
+        setPagination(data.pagination);
       } catch (error) {
         setError("Failed to fetch tasks!");
       } finally {
@@ -33,7 +44,7 @@ export default function Tasks() {
     }
 
     fetchTasks();
-  }, []);
+  }, [page]);
 
   async function handleToggleTask(task: Task) {
     try {
@@ -248,6 +259,34 @@ export default function Tasks() {
           </div>
         ))}
       </div>
+
+      {pagination.totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-center gap-4">
+          <button
+            type="button"
+            onClick={() => setPage((prev) => prev - 1)}
+            disabled={page == 1}
+            className="rounded border bg-white px-4 py-2 text-sm 
+            disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Previous
+          </button>
+
+          <span className="text-sm text-gray-600">
+            Page {pagination.page} of {pagination.totalPages}
+          </span>
+
+          <button
+            type="button"
+            onClick={() => setPage((prev) => prev + 1)}
+            disabled={page === pagination.totalPages}
+            className="rounded border bg-white px-4 py-2 text-sm 
+            disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       {taskToDelete && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40">

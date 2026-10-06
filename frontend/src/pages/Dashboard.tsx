@@ -22,6 +22,8 @@ export default function Dashboard() {
   const [debouncedProjectSearch, setDebouncedProjectSearch] = useState("");
 
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [totalTasks, setTotalTasks] = useState(0);
+  const [completedTasks, setCompletedTasks] = useState(0);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
@@ -74,7 +76,9 @@ export default function Dashboard() {
 
         const data = await getAllTasks();
 
-        setTasks(data);
+        setTasks(data.tasks);
+        setTotalTasks(data.pagination.total);
+        setCompletedTasks(data.stats.completed);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const message =
@@ -132,10 +136,6 @@ export default function Dashboard() {
       setIsCreating(false);
     }
   }
-
-  const totalTasks = tasks.length;
-
-  const completedTasks = tasks.filter((task) => task.isCompleted).length;
 
   const currentHour = new Date().getHours();
 

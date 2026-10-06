@@ -152,7 +152,11 @@ export async function getTaskById(taskId: string, userId: string) {
     return task;
 }
 
-export async function getAllTasks(userId: string, page: number = 1, limit: number = 10) {
+export async function getAllTasks(
+    userId: string,
+    page: number = 1,
+    limit: number = 10,
+) {
     const skip = (page - 1) * limit;
 
     const where = {
@@ -161,7 +165,7 @@ export async function getAllTasks(userId: string, page: number = 1, limit: numbe
         },
     };
 
-    const [tasks, total] = await Promise.all([
+    const [tasks, total, completed] = await Promise.all([
         prisma.task.findMany({
             where,
             include: {
@@ -184,8 +188,14 @@ export async function getAllTasks(userId: string, page: number = 1, limit: numbe
         prisma.task.count({
             where,
         }),
-    ]);
 
+        prisma.task.count({
+            where: {
+                ...where,
+                isCompleted: true,
+            },
+        }),
+    ]);
 
     return {
         tasks,
@@ -194,6 +204,9 @@ export async function getAllTasks(userId: string, page: number = 1, limit: numbe
             limit,
             total,
             totalPages: Math.ceil(total / limit),
+        },
+        stats: {
+            completed,
         },
     };
 }

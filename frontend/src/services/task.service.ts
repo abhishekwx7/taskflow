@@ -1,8 +1,30 @@
 import api from "../lib/api";
 import type { Task } from "../types/task";
 
+interface Pagination {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
 interface TasksResponse {
     tasks: Task[];
+}
+
+interface GetAllTasksResponse {
+    tasks: Task[];
+
+    pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+    };
+
+    stats: {
+        completed: number;
+    };
 }
 
 export type TaskSort =
@@ -34,11 +56,16 @@ export async function getTasks(
     return response.data.tasks;
 }
 
-export async function getAllTasks() {
+export async function getAllTasks(page = 1, limit = 10) {
     const response =
-        await api.get<TasksResponse>("/tasks");
+        await api.get<GetAllTasksResponse>("/tasks", {
+            params: {
+                page,
+                limit,
+            }
+        });
 
-    return response.data.tasks;
+    return response.data;
 }
 
 export interface CreateTaskInput {

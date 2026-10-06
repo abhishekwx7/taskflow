@@ -49,6 +49,10 @@ export default function Tasks() {
   }, [search]);
 
   useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, status, sort]);
+
+  useEffect(() => {
     async function fetchTasks() {
       try {
         setError("");

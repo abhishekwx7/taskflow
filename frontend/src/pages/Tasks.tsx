@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { getAllTasks, updateTask, deleteTask } from "../services/task.service";
+import {
+  getAllTasks,
+  updateTask,
+  deleteTask,
+  type TaskSort,
+} from "../services/task.service";
 import type { Task } from "../types/task";
 import axios from "axios";
 
@@ -15,6 +20,13 @@ export default function Tasks() {
     totalPages: 1,
   });
 
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  const [status, setStatus] = useState<"all" | "pending" | "completed">("all");
+
+  const [sort, setSort] = useState<TaskSort>("newest");
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -27,12 +39,28 @@ export default function Tasks() {
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search.trim());
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
+
+  useEffect(() => {
     async function fetchTasks() {
       try {
         setError("");
         setIsLoading(true);
 
-        const data = await getAllTasks(page, 10);
+        const data = await getAllTasks({
+          page,
+          limit: 10,
+          search: debouncedSearch || undefined,
+          status,
+          sort,
+        });
 
         setTasks(data.tasks);
         setPagination(data.pagination);
@@ -44,7 +72,7 @@ export default function Tasks() {
     }
 
     fetchTasks();
-  }, [page]);
+  }, [page, debouncedSearch, status, sort]);
 
   async function handleToggleTask(task: Task) {
     try {
@@ -178,6 +206,43 @@ export default function Tasks() {
       {error && (
         <p className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</p>
       )}
+
+      <div className="mt-6 flex flex-wrap gap-4">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search tasks..."
+          className="rounded border bg-white px-3 py-2"
+        />
+      </div>
+
+      <select
+        value={status}
+        onChange={(e) =>
+          setStatus(e.target.value as "all" | "pending" | "completed")
+        }
+        className="rounded border bg-white px-3 py-2"
+      >
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+      </select>
+
+      <select
+        value={sort}
+        onChange={(e) => {
+          setSort(e.target.value as TaskSort);
+        }}
+        className="rounded border bg-white px-3 py-2"
+      >
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="dueDateAsc">Due date: earliest</option>
+        <option value="dueDateDesc">Due date: latest</option>
+        <option value="nameAsc">Name A - Z</option>
+        <option value="nameDesc">Name Z - A</option>
+      </select>
 
       <div className="mt-8 space-y-3">
         {tasks.map((task) => (

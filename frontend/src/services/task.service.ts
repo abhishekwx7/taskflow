@@ -1,13 +1,6 @@
 import api from "../lib/api";
 import type { Task } from "../types/task";
 
-interface Pagination {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-}
-
 interface TasksResponse {
     tasks: Task[];
 }
@@ -42,28 +35,34 @@ export interface GetTasksQuery {
     sort?: TaskSort;
 }
 
+export interface GetAllTasksQuery extends GetTasksQuery {
+    page?: number;
+    limit?: number;
+}
+
 export async function getTasks(
     projectId: string,
-    query?: GetTasksQuery
+    query?: GetTasksQuery,
 ) {
     const response = await api.get<TasksResponse>(
         `projects/${projectId}/tasks`,
         {
             params: query,
-        }
+        },
     );
 
     return response.data.tasks;
 }
 
-export async function getAllTasks(page = 1, limit = 10) {
-    const response =
-        await api.get<GetAllTasksResponse>("/tasks", {
-            params: {
-                page,
-                limit,
-            }
-        });
+export async function getAllTasks(
+    query?: GetAllTasksQuery,
+) {
+    const response = await api.get<GetAllTasksResponse>(
+        "/tasks",
+        {
+            params: query,
+        },
+    );
 
     return response.data;
 }
@@ -75,9 +74,12 @@ export interface CreateTaskInput {
 
 export async function createTask(
     projectId: string,
-    data: CreateTaskInput
+    data: CreateTaskInput,
 ) {
-    const response = await api.post<{ task: Task }>(`/projects/${projectId}/tasks`, data);
+    const response = await api.post<{ task: Task }>(
+        `/projects/${projectId}/tasks`,
+        data,
+    );
 
     return response.data.task;
 }
@@ -94,9 +96,12 @@ interface UpdateTaskResponse {
 
 export async function updateTask(
     taskId: string,
-    data: UpdateTaskInput
+    data: UpdateTaskInput,
 ) {
-    const response = await api.patch<UpdateTaskResponse>(`/tasks/${taskId}`, data);
+    const response = await api.patch<UpdateTaskResponse>(
+        `/tasks/${taskId}`,
+        data,
+    );
 
     return response.data.task;
 }

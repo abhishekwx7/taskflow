@@ -154,22 +154,108 @@ export async function getTaskById(taskId: string, userId: string) {
 
 export async function getAllTasks(
     userId: string,
-    page: number = 1,
-    limit: number = 10,
+    query: TaskQueryInput,
 ) {
+    const {
+        search,
+        status,
+        labels,
+        sort,
+        page,
+        limit,
+    } = query;
+
     const skip = (page - 1) * limit;
+
+    const hasLabelFilter =
+        labels !== undefined && labels.length > 0;
+
+    let sortOrder;
+
+    switch (sort) {
+        case "oldest":
+            sortOrder = {
+                createdAt: "asc" as const,
+            };
+            break;
+
+        case "dueDateAsc":
+            sortOrder = {
+                dueDate: {
+                    sort: "asc" as const,
+                    nulls: "last" as const,
+                },
+            };
+            break;
+
+        case "dueDateDesc":
+            sortOrder = {
+                dueDate: {
+                    sort: "desc" as const,
+                    nulls: "last" as const,
+                },
+            };
+            break;
+
+        case "nameAsc":
+            sortOrder = {
+                name: "asc" as const,
+            };
+            break;
+
+        case "nameDesc":
+            sortOrder = {
+                name: "desc" as const,
+            };
+            break;
+
+        case "newest":
+        default:
+            sortOrder = {
+                createdAt: "desc" as const,
+            };
+    }
 
     const where = {
         project: {
             userId,
         },
+
+        ...(hasLabelFilter
+            ? {
+                labels: {
+                    some: {
+                        id: {
+                            in: labels,
+                        },
+                    },
+                },
+            }
+            : {
+                ...(search && {
+                    name: {
+                        contains: search,
+                        mode: "insensitive" as const,
+                    },
+                }),
+
+                ...(status === "pending" && {
+                    isCompleted: false,
+                }),
+
+                ...(status === "completed" && {
+                    isCompleted: true,
+                }),
+            }),
     };
 
     const [tasks, total, completed] = await Promise.all([
         prisma.task.findMany({
             where,
+
             include: {
                 labels: true,
+
                 project: {
                     select: {
                         id: true,
@@ -178,9 +264,14 @@ export async function getAllTasks(
                     },
                 },
             },
-            orderBy: {
-                createdAt: "desc",
-            },
+
+            orderBy: [
+                {
+                    isCompleted: "asc",
+                },
+                sortOrder,
+            ],
+
             skip,
             take: limit,
         }),
@@ -191,7 +282,9 @@ export async function getAllTasks(
 
         prisma.task.count({
             where: {
-                ...where,
+                project: {
+                    userId,
+                },
                 isCompleted: true,
             },
         }),
@@ -199,12 +292,14 @@ export async function getAllTasks(
 
     return {
         tasks,
+
         pagination: {
             page,
             limit,
             total,
             totalPages: Math.ceil(total / limit),
         },
+
         stats: {
             completed,
         },

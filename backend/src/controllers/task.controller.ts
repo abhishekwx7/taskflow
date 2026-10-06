@@ -168,14 +168,13 @@ export async function getAllTasks(
         if (!result.success) {
             return res.status(400).json({
                 message: "Invalid query parameters!",
-                errors: result.error.flatten()
-            })
+                errors: result.error.flatten(),
+            });
         }
 
         const data = await taskService.getAllTasks(
             req.userId,
-            result.data.page,
-            result.data.limit,
+            result.data,
         );
 
         return res.status(200).json(data);

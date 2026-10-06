@@ -6,9 +6,12 @@ import projectRoutes from "./routes/project.routes.js";
 import taskRoutes from "./routes/task.route.js";
 import labelroutes from "./routes/label.route.js";
 
+import helmet from "helmet";
+
 const app = express();
 
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
 app.get("/", (req, res) => {

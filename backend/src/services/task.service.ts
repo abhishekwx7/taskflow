@@ -221,32 +221,30 @@ export async function getAllTasks(
             userId,
         },
 
-        ...(hasLabelFilter
-            ? {
-                labels: {
-                    some: {
-                        id: {
-                            in: labels,
-                        },
+        ...(search && {
+            name: {
+                contains: search,
+                mode: "insensitive" as const,
+            },
+        }),
+
+        ...(status === "pending" && {
+            isCompleted: false,
+        }),
+
+        ...(status === "completed" && {
+            isCompleted: true,
+        }),
+
+        ...(hasLabelFilter && {
+            labels: {
+                some: {
+                    id: {
+                        in: labels,
                     },
                 },
-            }
-            : {
-                ...(search && {
-                    name: {
-                        contains: search,
-                        mode: "insensitive" as const,
-                    },
-                }),
-
-                ...(status === "pending" && {
-                    isCompleted: false,
-                }),
-
-                ...(status === "completed" && {
-                    isCompleted: true,
-                }),
-            }),
+            },
+        }),
     };
 
     const [tasks, total, completed] = await Promise.all([

@@ -5,8 +5,14 @@ import {
   deleteTask,
   type TaskSort,
 } from "../services/task.service";
+import { getLabels } from "../services/label.service";
 import type { Task } from "../types/task";
+import type { Label } from "../types/label";
 import axios from "axios";
+
+interface TaskStats {
+  completed: number;
+}
 
 export default function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -38,10 +44,17 @@ export default function Tasks() {
   const [editDueDate, setEditDueDate] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
 
+  const [stats, setStats] = useState<TaskStats>({
+    completed: 0,
+  });
+
+  const [labels, setLabels] = useState<Label[]>([]);
+  const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search.trim());
-    }, 500);
+    }, 1500);
 
     return () => {
       clearTimeout(timer);
@@ -64,10 +77,15 @@ export default function Tasks() {
           search: debouncedSearch || undefined,
           status,
           sort,
+          labels:
+            selectedLabelIds.length > 0
+              ? selectedLabelIds.join(",")
+              : undefined,
         });
 
         setTasks(data.tasks);
         setPagination(data.pagination);
+        setStats(data.stats);
       } catch (error) {
         setError("Failed to fetch tasks!");
       } finally {
@@ -76,7 +94,30 @@ export default function Tasks() {
     }
 
     fetchTasks();
-  }, [page, debouncedSearch, status, sort]);
+  }, [page, debouncedSearch, status, sort, selectedLabelIds]);
+
+  useEffect(() => {
+    async function fetchLabels() {
+      try {
+        const data = await getLabels();
+        setLabels(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchLabels();
+  }, []);
+
+  function toggleLabel(labelId: string) {
+    setSelectedLabelIds((prev) =>
+      prev.includes(labelId)
+        ? prev.filter((id) => id !== labelId)
+        : [...prev, labelId],
+    );
+
+    setPage(1);
+  }
 
   async function handleToggleTask(task: Task) {
     try {
@@ -211,42 +252,71 @@ export default function Tasks() {
         <p className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</p>
       )}
 
-      <div className="mt-6 flex flex-wrap gap-4">
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search tasks..."
-          className="rounded border bg-white px-3 py-2"
-        />
+      <div className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search tasks..."
+            className="w-64 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-gray-500 focus:ring-2 focus:ring-gray-200"
+          />
+
+          <select
+            value={status}
+            onChange={(e) =>
+              setStatus(e.target.value as "all" | "pending" | "completed")
+            }
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition hover:bg-gray-50 focus:border-gray-500 focus:ring-2 focus:ring-gray-200"
+          >
+            <option value="all">All tasks</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+          </select>
+
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as TaskSort)}
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition hover:bg-gray-50 focus:border-gray-500 focus:ring-2 focus:ring-gray-200"
+          >
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="dueDateAsc">Due date: earliest</option>
+            <option value="dueDateDesc">Due date: latest</option>
+            <option value="nameAsc">Name A - Z</option>
+            <option value="nameDesc">Name Z - A</option>
+          </select>
+        </div>
+
+        {labels.length > 0 && (
+          <div className="mt-5 border-t border-gray-200 pt-4">
+            <p className="mb-3 text-sm font-medium text-gray-500">
+              Filter by label
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {labels.map((label) => {
+                const isSelected = selectedLabelIds.includes(label.id);
+
+                return (
+                  <button
+                    key={label.id}
+                    type="button"
+                    onClick={() => toggleLabel(label.id)}
+                    className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+                      isSelected
+                        ? "border-gray-900 bg-gray-900 text-white shadow-sm"
+                        : "border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50"
+                    }`}
+                  >
+                    {label.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
-
-      <select
-        value={status}
-        onChange={(e) =>
-          setStatus(e.target.value as "all" | "pending" | "completed")
-        }
-        className="rounded border bg-white px-3 py-2"
-      >
-        <option value="all">All</option>
-        <option value="pending">Pending</option>
-        <option value="completed">Completed</option>
-      </select>
-
-      <select
-        value={sort}
-        onChange={(e) => {
-          setSort(e.target.value as TaskSort);
-        }}
-        className="rounded border bg-white px-3 py-2"
-      >
-        <option value="newest">Newest</option>
-        <option value="oldest">Oldest</option>
-        <option value="dueDateAsc">Due date: earliest</option>
-        <option value="dueDateDesc">Due date: latest</option>
-        <option value="nameAsc">Name A - Z</option>
-        <option value="nameDesc">Name Z - A</option>
-      </select>
 
       <div className="mt-8 space-y-3">
         {tasks.map((task) => (

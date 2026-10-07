@@ -1,9 +1,24 @@
 import request from "supertest";
-import { describe, expect, it } from "vitest";
+import {
+    afterAll,
+    beforeEach,
+    describe,
+    expect,
+    it,
+} from "vitest";
 
 import app from "../src/app.js";
+import prisma from "../src/config/prisma.js";
 
 describe("Auth API", () => {
+    beforeEach(async () => {
+        await prisma.user.deleteMany();
+    });
+
+    afterAll(async () => {
+        await prisma.$disconnect();
+    });
+
     it("should reject signup with invalid data", async () => {
         const response = await request(app)
             .post("/api/auth/signup")
@@ -22,7 +37,7 @@ describe("Auth API", () => {
         expect(response.status).toBe(401);
     });
 
-    it("should create a new user with valid data", async () => {
+    it("should create a user with valid data", async () => {
         const response = await request(app)
             .post("/api/auth/signup")
             .send({
@@ -33,5 +48,14 @@ describe("Auth API", () => {
 
         expect(response.status).toBe(201);
         expect(response.body.user.email).toBe("test@example.com");
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email: "test@example.com",
+            },
+        });
+
+        expect(user).not.toBeNull();
+        expect(user?.email).toBe("test@example.com");
     });
 });

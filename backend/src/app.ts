@@ -19,13 +19,20 @@ app.use(helmet());
 
 app.use(express.json({ limit: "10kb" }));
 
-app.use("/api", apiLimiter);
+if (process.env.NODE_ENV !== "test") {
+    app.use("/api", apiLimiter);
+}
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
     res.send("Backend is running 🚀");
 });
 
-app.use("/api/auth", authLimiter, authRoutes);
+if (process.env.NODE_ENV !== "test") {
+    app.use("/api/auth", authLimiter, authRoutes);
+} else {
+    app.use("/api/auth", authRoutes);
+}
+
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/labels", labelroutes);

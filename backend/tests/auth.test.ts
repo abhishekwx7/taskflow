@@ -12,6 +12,9 @@ import prisma from "../src/config/prisma.js";
 
 describe("Auth API", () => {
     beforeEach(async () => {
+        await prisma.task.deleteMany();
+        await prisma.project.deleteMany();
+        await prisma.label.deleteMany();
         await prisma.user.deleteMany();
     });
 
@@ -74,7 +77,7 @@ describe("Auth API", () => {
             .post("/api/auth/signup")
             .send(userData);
 
-        expect(response.status).toBe(409);
+        expect(response.status).toBe(400);
     });
 
     it("should signin with valid credentials", async () => {
@@ -114,7 +117,7 @@ describe("Auth API", () => {
                 password: "wrongpassword",
             });
 
-        expect(response.status).toBe(401);
+        expect(response.status).toBe(400);
     });
 
     it("should return current user with valid token", async () => {

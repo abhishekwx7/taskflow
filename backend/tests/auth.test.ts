@@ -58,4 +58,88 @@ describe("Auth API", () => {
         expect(user).not.toBeNull();
         expect(user?.email).toBe("test@example.com");
     });
+
+    it("should reject signup with duplicate email", async () => {
+        const userData = {
+            name: "Test User",
+            email: "test@example.com",
+            password: "password123",
+        };
+
+        await request(app)
+            .post("/api/auth/signup")
+            .send(userData);
+
+        const response = await request(app)
+            .post("/api/auth/signup")
+            .send(userData);
+
+        expect(response.status).toBe(409);
+    });
+
+    it("should signin with valid credentials", async () => {
+        await request(app)
+            .post("/api/auth/signup")
+            .send({
+                name: "Test User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+        const response = await request(app)
+            .post("/api/auth/signin")
+            .send({
+                email: "test@example.com",
+                password: "password123",
+            });
+
+        expect(response.status).toBe(200);
+        expect(response.body.user.email).toBe("test@example.com");
+        expect(response.body.token).toBeDefined();
+    });
+
+    it("should reject signin with wrong password", async () => {
+        await request(app)
+            .post("/api/auth/signup")
+            .send({
+                name: "Test User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+        const response = await request(app)
+            .post("/api/auth/signin")
+            .send({
+                email: "test@example.com",
+                password: "wrongpassword",
+            });
+
+        expect(response.status).toBe(401);
+    });
+
+    it("should return current user with valid token", async () => {
+        await request(app)
+            .post("/api/auth/signup")
+            .send({
+                name: "Test User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+        const signinResponse = await request(app)
+            .post("/api/auth/signin")
+            .send({
+                email: "test@example.com",
+                password: "password123",
+            });
+
+        const token = signinResponse.body.token;
+
+        const response = await request(app)
+            .get("/api/auth/me")
+            .set("Authorization", `Bearer ${token}`);
+
+        expect(response.status).toBe(200);
+        expect(response.body.user.email).toBe("test@example.com");
+    });
 });

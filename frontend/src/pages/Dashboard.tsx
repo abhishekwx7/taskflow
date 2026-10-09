@@ -154,52 +154,77 @@ export default function Dashboard() {
         {/* SIDEBAR */}
 
         <aside className="flex w-64 shrink-0 flex-col border-r border-gray-200 bg-white">
-          {/* Logo */}
+          {/* Branding */}
+          <div className="flex items-center gap-3 border-b border-gray-200 px-5 py-5">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600">
+              <CheckCheck className="h-5 w-5 text-white" />
+            </div>
 
-          <div className="border-b px-6 py-5">
-            <h1 className="text-xl font-bold text-gray-900">TaskFlow</h1>
-
-            {user && (
-              <p className="mt-1 text-sm text-gray-500">Welcome, {user.name}</p>
-            )}
+            <div>
+              <h1 className="text-lg font-bold tracking-tight text-gray-900">
+                TaskFlow
+              </h1>
+              <p className="text-xs text-gray-500">Project Management</p>
+            </div>
           </div>
 
           {/* Navigation */}
-
           <nav className="flex-1 px-3 py-6">
-            <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-              WorkSpace
+            <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              Workspace
             </p>
 
-            {/* Dashboard */}
+            <div className="space-y-1">
+              <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="flex w-full items-center gap-3 rounded-lg bg-blue-50 px-3 py-2.5 text-sm font-semibold text-blue-700 transition-colors"
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </button>
 
-            <button
-              onClick={() => navigate("/")}
-              className="mb-1 flex w-full items-center gap-3 rounded-lg bg-gray-100 px-3 py-2.5 text-sm font-medium text-gray-900"
-            >
-              <span>▦</span>
-              Dashboard
-            </button>
-
-            {/* Tasks */}
-            <button
-              onClick={() => navigate("/tasks")}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
-            >
-              <span>✓</span>
-              Tasks
-            </button>
+              <button
+                type="button"
+                onClick={() => navigate("/tasks")}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              >
+                <ListTodo className="h-4 w-4" />
+                Tasks
+              </button>
+            </div>
           </nav>
 
-          {/* Logout */}
+          {/* Account and Logout */}
+          <div className="border-t border-gray-200 p-3">
+            {user && (
+              <div className="mb-3 flex items-center gap-3 rounded-lg px-3 py-2">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
+                  {user.name
+                    .trim()
+                    .split(/\s+/)
+                    .slice(0, 2)
+                    .map((part) => part[0])
+                    .join("")
+                    .toUpperCase()}
+                </div>
 
-          <div className="border-t p-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-gray-900">
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-gray-500">My Workspace</p>
+                </div>
+              </div>
+            )}
+
             <button
+              type="button"
               onClick={logout}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-red-50 hover:text-red-600"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600"
             >
-              <span>↪</span>
-              Logout
+              <LogOut className="h-4 w-4" />
+              Log out
             </button>
           </div>
         </aside>

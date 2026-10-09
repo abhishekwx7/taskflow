@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LayoutDashboard, ListTodo, LogOut, CheckCheck } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -148,11 +149,11 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <div className="flex min-h-screen">
         {/* SIDEBAR */}
 
-        <aside className="flex w-64 flex-col border-r bg-white">
+        <aside className="flex w-64 shrink-0 flex-col border-r border-gray-200 bg-white">
           {/* Logo */}
 
           <div className="border-b px-6 py-5">
@@ -205,12 +206,12 @@ export default function Dashboard() {
 
         {/* MAIN CONTENT */}
 
-        <main className="flex-1">
+        <main className="min-w-0 flex-1">
           {/* Top Header */}
 
-          <header className="border-b bg-white">
-            <div className="px-8 py-5">
-              <h2 className="text-2xl font-bold text-gray-900">
+          <header className="border-b border-gray-200 bg-white">
+            <div className="mx-auto max-w-6xl px-6 py-6 lg:px-8">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900">
                 {greeting}, {user?.name} 👋
               </h2>
 
@@ -222,30 +223,30 @@ export default function Dashboard() {
 
           {/* Page Content */}
 
-          <div className="mx-auto max-w-6xl px-8 py-8">
+          <div className="mx-auto max-w-6xl px-6 py-4 lg:px-8">
             {/* Dashboard Stats */}
 
-            <div className="mb-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-xl border bg-white p-5 shadow-sm">
+            <div className="mb-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
                 <p className="text-sm font-medium text-gray-500">Projects</p>
 
-                <p className="mt-2 text-3xl font-bold text-gray-900">
+                <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
                   {projects.length}
                 </p>
               </div>
 
-              <div className="rounded-xl border bg-white p-5 shadow-sm">
+              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                 <p className="text-sm font-medium text-gray-500">Total Tasks</p>
 
-                <p className="mt-2 text-3xl font-bold text-gray-900">
+                <p className="mt-3 text-3xl font-bold tracking-tight text-gray-900">
                   {totalTasks}
                 </p>
               </div>
 
-              <div className="rounded-xl border bg-white p-5 shadow-sm">
+              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                 <p className="text-sm font-medium text-gray-500">Completed</p>
 
-                <p className="mt-2 text-3xl font-bold text-gray-900">
+                <p className="mt-3 text-3xl font-bold tracking-tight text-gray-900">
                   {completedTasks}
                 </p>
               </div>
@@ -254,7 +255,7 @@ export default function Dashboard() {
             {/* PROJECTS */}
 
             <section>
-              <div className="mb-5 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900">
                     Projects
@@ -265,51 +266,51 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Search */}
-
-              <input
-                type="text"
-                value={projectSearch}
-                onChange={(e) => {
-                  setProjectSearch(e.target.value);
-                }}
-                placeholder="Search projects..."
-                className="mb-4 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-              />
-
-              {/* Create Project */}
-
-              <form
-                onSubmit={handleCreateProject}
-                className="mb-8 flex flex-col gap-3 rounded-xl border bg-white p-4 shadow-sm sm:flex-row"
-              >
+              <div className="mb-5 space-y-3">
+                {" "}
+                {/* Search */}
                 <input
                   type="text"
-                  value={projectName}
+                  value={projectSearch}
                   onChange={(e) => {
-                    setProjectName(e.target.value);
+                    setProjectSearch(e.target.value);
                   }}
-                  placeholder="Project name"
-                  className="flex-1 rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  placeholder="Search projects..."
+                  className="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 />
-
-                <input
-                  type="color"
-                  value={projectColor}
-                  onChange={(e) => {
-                    setProjectColor(e.target.value);
-                  }}
-                  className="h-10 w-16 cursor-pointer rounded-lg border border-gray-300"
-                />
-
-                <button
-                  type="submit"
-                  disabled={isCreating || !projectName.trim()}
-                  className="rounded-lg bg-blue-600 px-5 py-2 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                {/* Create Project */}
+                <form
+                  onSubmit={handleCreateProject}
+                  className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center"
                 >
-                  {isCreating ? "Creating..." : "Create Project"}
-                </button>
-              </form>
+                  <input
+                    type="text"
+                    value={projectName}
+                    onChange={(e) => {
+                      setProjectName(e.target.value);
+                    }}
+                    placeholder="Project name"
+                    className="h-10 min-w-0 flex-1 rounded-lg border border-gray-300 px-4 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+
+                  <input
+                    type="color"
+                    value={projectColor}
+                    onChange={(e) => {
+                      setProjectColor(e.target.value);
+                    }}
+                    className="h-10 w-14 shrink-0 cursor-pointer rounded-lg border border-gray-300"
+                  />
+
+                  <button
+                    type="submit"
+                    disabled={isCreating || !projectName.trim()}
+                    className="h-10 shrink-0 rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {isCreating ? "Creating..." : "Create Project"}
+                  </button>
+                </form>
+              </div>
 
               {/* Error */}
 
@@ -337,17 +338,17 @@ export default function Dashboard() {
                     <div
                       key={project.id}
                       onClick={() => navigate(`/projects/${project.id}`)}
-                      className="cursor-pointer rounded-xl border bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                      className="cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
                     >
-                      <div className="mb-4 flex items-center gap-3">
+                      <div className="mb-3 flex items-center gap-3">
                         <div
-                          className="h-4 w-4 rounded-full"
+                          className="h-3 w-3 shrink-0 rounded-full"
                           style={{
                             backgroundColor: project.color || "#6b7280",
                           }}
                         />
 
-                        <h4 className="font-semibold text-gray-900">
+                        <h4 className="min-w-0 truncate text-sm font-semibold text-gray-900">
                           {project.name}
                         </h4>
                       </div>

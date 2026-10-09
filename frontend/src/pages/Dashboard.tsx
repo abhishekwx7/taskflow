@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutDashboard, ListTodo, LogOut, CheckCheck } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -12,7 +11,7 @@ import type { Task } from "../types/task";
 import type { CreateProjectInput, Project } from "../types/projects";
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [projects, setProjects] = useState<Project[]>([]);

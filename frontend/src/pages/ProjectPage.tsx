@@ -394,16 +394,22 @@ export default function ProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <main className="mx-auto max-w-5xl px-6 py-8">
-        <h1 className="mb-6 text-2xl font-bold">Tasks</h1>
-        <div className="mb-4">
+    <div className="min-h-screen bg-gray-50">
+      <div className="mx-auto max-w-6xl px-6 py-6 lg:px-8">
+        <div className="mb-6">
+          <h1 className="mb-6 text-2xl font-bold">Tasks</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Manage tasks, due dates, and labels for this project.
+          </p>
+        </div>
+
+        <div className="mb-3">
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search tasks..."
-            className="w-full rounded-lg border bg-white px-4 py-2 shadow-sm"
+            className="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
           />
         </div>
         {error && (
@@ -411,40 +417,44 @@ export default function ProjectPage() {
         )}
         <form
           onSubmit={handleCreateTask}
-          className="mb-6 flex flex-col gap-3 rounded-lg bg-white p-4 shadow sm:flex-row"
+          className="mb-6 flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center"
         >
           <input
             type="text"
             value={taskName}
             onChange={(e) => setTaskName(e.target.value)}
             placeholder="Task Name"
-            className="flex-1 rounded border px-3 py-2"
+            className="h-10 min-w-0 flex-1 rounded-lg border border-gray-300 px-4 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
           />
 
           <input
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="rounded border px-3 py-2"
+            className="h-10 min-w-0 rounded-lg border border-gray-300 px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:w-44"
           />
 
           <button
             type="submit"
             disabled={isCreating || !taskName.trim()}
-            className="rounded bg-blue-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-10 shrink-0 rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isCreating ? "Creating..." : "Add Task"}
           </button>
         </form>
-        <div className="mb-4 flex justify-between">
-          <div className="flex gap-2">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => {
                 setSelectedLabelsIds([]);
                 setStatus("all");
               }}
-              className="rounded border px-3 py-2"
+              className={`h-10 rounded-lg border px-4 text-sm font-medium transition-colors ${
+                status === "all" && selectedLabelIds.length === 0
+                  ? "border-blue-200 bg-blue-50 text-blue-700"
+                  : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+              }`}
             >
               All
             </button>
@@ -454,7 +464,11 @@ export default function ProjectPage() {
                 setSelectedLabelsIds([]);
                 setStatus("pending");
               }}
-              className="rounded border px-3 py-2 bg-yellow-300"
+              className={`h-10 rounded-lg border px-4 text-sm font-medium transition-colors ${
+                status === "pending" && selectedLabelIds.length === 0
+                  ? "border-blue-200 bg-blue-50 text-blue-700"
+                  : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+              }`}
             >
               Pending
             </button>
@@ -464,7 +478,11 @@ export default function ProjectPage() {
                 setSelectedLabelsIds([]);
                 setStatus("completed");
               }}
-              className="rounded border px-3 py-2 bg-green-300"
+              className={`h-10 rounded-lg border px-4 text-sm font-medium transition-colors ${
+                status === "completed" && selectedLabelIds.length === 0
+                  ? "border-blue-200 bg-blue-50 text-blue-700"
+                  : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+              }`}
             >
               Completed
             </button>
@@ -472,7 +490,11 @@ export default function ProjectPage() {
             <button
               type="button"
               onClick={() => setIsLabelFilterOpen((prev) => !prev)}
-              className="rounded border px-3 py-2 bg-gray-500"
+              className={`h-10 rounded-lg border px-4 text-sm font-medium transition-colors ${
+                selectedLabelIds.length > 0
+                  ? "border-blue-200 bg-blue-50 text-blue-700"
+                  : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+              }`}
             >
               Filter by labels
               {selectedLabelIds.length > 0 && ` (${selectedLabelIds.length})`}
@@ -482,21 +504,21 @@ export default function ProjectPage() {
           <div className="relative">
             <button
               type="button"
-              className="rounded border-amber-200 px-3 py-2 bg-amber-800"
+              className="h-10 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
               onClick={() => setIsSortOpen((prev) => !prev)}
             >
               Sort
             </button>
 
             {isSortOpen && (
-              <div className="absolute right-0 mt-2 w-32 rounded-lg border bg-white shadow-lg z-10 text-center">
+              <div className="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
                 <button
                   type="button"
                   onClick={() => {
                     setSort("newest");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
                 >
                   Newest
                 </button>
@@ -507,7 +529,7 @@ export default function ProjectPage() {
                     setSort("oldest");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
                 >
                   Oldest
                 </button>
@@ -518,7 +540,7 @@ export default function ProjectPage() {
                     setSort("dueDateAsc");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
                 >
                   Due date: earliest
                 </button>
@@ -529,7 +551,7 @@ export default function ProjectPage() {
                     setSort("dueDateDesc");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
                 >
                   Due date: latest
                 </button>
@@ -537,9 +559,10 @@ export default function ProjectPage() {
                 <button
                   type="button"
                   onClick={() => {
+                    setSort("nameAsc");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full border-b px-3 py-2 hover:bg-gray-300"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
                 >
                   Name A-Z
                 </button>
@@ -550,7 +573,7 @@ export default function ProjectPage() {
                     setSort("nameDesc");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full hover:bg-gray-300"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
                 >
                   Name Z-A
                 </button>
@@ -629,8 +652,10 @@ export default function ProjectPage() {
             {sortedTask.map((task) => (
               <div
                 key={task.id}
-                className={`rounded-lg p-4 shadow ${
-                  task.isCompleted ? "bg-green-400" : "bg-white"
+                className={`rounded-xl border p-4 shadow-sm transition-colors ${
+                  task.isCompleted
+                    ? "border-green-200 bg-green-50"
+                    : "border-gray-200 bg-white"
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -691,14 +716,14 @@ export default function ProjectPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => openEditDialog(task)}
-                      className="rounded bg-blue-500 px-3 py-1 text-sm text-white"
+                      className="h-9 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
                     >
                       Edit
                     </button>
 
                     <button
                       onClick={() => setTaskToDelete(task)}
-                      className="rounded bg-red-500 px-3 py-1 text-sm text-white"
+                      className="h-9 rounded-lg border border-red-200 bg-red-50 px-3 text-sm font-medium text-red-600 transition-colors hover:bg-red-100"
                     >
                       Delete
                     </button>
@@ -876,7 +901,7 @@ export default function ProjectPage() {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

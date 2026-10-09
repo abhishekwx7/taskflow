@@ -9,7 +9,6 @@ import { getLabels } from "../services/label.service";
 import type { Task } from "../types/task";
 import type { Label } from "../types/label";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 interface TaskStats {
   completed: number;
@@ -51,8 +50,6 @@ export default function Tasks() {
 
   const [labels, setLabels] = useState<Label[]>([]);
   const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -247,14 +244,6 @@ export default function Tasks() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-10">
-      <button
-        type="button"
-        onClick={() => navigate("/")}
-        className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-600 
-        transition hover:text-gray-900"
-      >
-        ← Back to Dashboard
-      </button>
       <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
 
       <p className="mt-2 text-gray-500">All tasks across your projects</p>

@@ -149,247 +149,156 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex min-h-screen">
-        {/* SIDEBAR */}
+    <>
+      <header className="border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-6xl px-6 py-6 lg:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            {greeting}, {user?.name} 👋
+          </h2>
 
-        <aside className="flex w-64 shrink-0 flex-col border-r border-gray-200 bg-white">
-          {/* Branding */}
-          <div className="flex items-center gap-3 border-b border-gray-200 px-5 py-5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600">
-              <CheckCheck className="h-5 w-5 text-white" />
-            </div>
+          <p className="mt-1 text-sm text-gray-500">
+            Manage your projects and stay organized.
+          </p>
+        </div>
+      </header>
 
-            <div>
-              <h1 className="text-lg font-bold tracking-tight text-gray-900">
-                TaskFlow
-              </h1>
-              <p className="text-xs text-gray-500">Project Management</p>
-            </div>
-          </div>
+      <div className="mx-auto max-w-6xl px-6 py-4 lg:px-8">
+        {/* Dashboard Stats */}
 
-          {/* Navigation */}
-          <nav className="flex-1 px-3 py-6">
-            <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-              Workspace
+        <div className="mb-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
+            <p className="text-sm font-medium text-gray-500">Projects</p>
+
+            <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
+              {projects.length}
             </p>
-
-            <div className="space-y-1">
-              <button
-                type="button"
-                onClick={() => navigate("/")}
-                className="flex w-full items-center gap-3 rounded-lg bg-blue-50 px-3 py-2.5 text-sm font-semibold text-blue-700 transition-colors"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Dashboard
-              </button>
-
-              <button
-                type="button"
-                onClick={() => navigate("/tasks")}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
-              >
-                <ListTodo className="h-4 w-4" />
-                Tasks
-              </button>
-            </div>
-          </nav>
-
-          {/* Account and Logout */}
-          <div className="border-t border-gray-200 p-3">
-            {user && (
-              <div className="mb-3 flex items-center gap-3 rounded-lg px-3 py-2">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
-                  {user.name
-                    .trim()
-                    .split(/\s+/)
-                    .slice(0, 2)
-                    .map((part) => part[0])
-                    .join("")
-                    .toUpperCase()}
-                </div>
-
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-gray-900">
-                    {user.name}
-                  </p>
-                  <p className="text-xs text-gray-500">My Workspace</p>
-                </div>
-              </div>
-            )}
-
-            <button
-              type="button"
-              onClick={logout}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600"
-            >
-              <LogOut className="h-4 w-4" />
-              Log out
-            </button>
           </div>
-        </aside>
 
-        {/* MAIN CONTENT */}
+          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-medium text-gray-500">Total Tasks</p>
 
-        <main className="min-w-0 flex-1">
-          {/* Top Header */}
+            <p className="mt-3 text-3xl font-bold tracking-tight text-gray-900">
+              {totalTasks}
+            </p>
+          </div>
 
-          <header className="border-b border-gray-200 bg-white">
-            <div className="mx-auto max-w-6xl px-6 py-6 lg:px-8">
-              <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-                {greeting}, {user?.name} 👋
-              </h2>
+          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-medium text-gray-500">Completed</p>
 
+            <p className="mt-3 text-3xl font-bold tracking-tight text-gray-900">
+              {completedTasks}
+            </p>
+          </div>
+        </div>
+
+        {/* PROJECTS */}
+
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900">Projects</h3>
               <p className="mt-1 text-sm text-gray-500">
-                Manage your projects and stay organized.
+                Your current projects
               </p>
             </div>
-          </header>
-
-          {/* Page Content */}
-
-          <div className="mx-auto max-w-6xl px-6 py-4 lg:px-8">
-            {/* Dashboard Stats */}
-
-            <div className="mb-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
-                <p className="text-sm font-medium text-gray-500">Projects</p>
-
-                <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
-                  {projects.length}
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                <p className="text-sm font-medium text-gray-500">Total Tasks</p>
-
-                <p className="mt-3 text-3xl font-bold tracking-tight text-gray-900">
-                  {totalTasks}
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                <p className="text-sm font-medium text-gray-500">Completed</p>
-
-                <p className="mt-3 text-3xl font-bold tracking-tight text-gray-900">
-                  {completedTasks}
-                </p>
-              </div>
-            </div>
-
-            {/* PROJECTS */}
-
-            <section>
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">
-                    Projects
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Your current projects
-                  </p>
-                </div>
-              </div>
-
-              <div className="mb-5 space-y-3">
-                {" "}
-                {/* Search */}
-                <input
-                  type="text"
-                  value={projectSearch}
-                  onChange={(e) => {
-                    setProjectSearch(e.target.value);
-                  }}
-                  placeholder="Search projects..."
-                  className="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                />
-                {/* Create Project */}
-                <form
-                  onSubmit={handleCreateProject}
-                  className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center"
-                >
-                  <input
-                    type="text"
-                    value={projectName}
-                    onChange={(e) => {
-                      setProjectName(e.target.value);
-                    }}
-                    placeholder="Project name"
-                    className="h-10 min-w-0 flex-1 rounded-lg border border-gray-300 px-4 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                  />
-
-                  <input
-                    type="color"
-                    value={projectColor}
-                    onChange={(e) => {
-                      setProjectColor(e.target.value);
-                    }}
-                    className="h-10 w-14 shrink-0 cursor-pointer rounded-lg border border-gray-300"
-                  />
-
-                  <button
-                    type="submit"
-                    disabled={isCreating || !projectName.trim()}
-                    className="h-10 shrink-0 rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {isCreating ? "Creating..." : "Create Project"}
-                  </button>
-                </form>
-              </div>
-
-              {/* Error */}
-
-              {error && (
-                <p className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-red-600">
-                  {error}
-                </p>
-              )}
-
-              {/* Projects */}
-
-              {isLoading ? (
-                <p className="text-sm text-gray-500">Loading projects...</p>
-              ) : projects.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
-                  <p className="font-medium text-gray-700">No projects yet</p>
-
-                  <p className="mt-1 text-sm text-gray-500">
-                    Create your first project above.
-                  </p>
-                </div>
-              ) : (
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {projects.map((project) => (
-                    <div
-                      key={project.id}
-                      onClick={() => navigate(`/projects/${project.id}`)}
-                      className="cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
-                    >
-                      <div className="mb-3 flex items-center gap-3">
-                        <div
-                          className="h-3 w-3 shrink-0 rounded-full"
-                          style={{
-                            backgroundColor: project.color || "#6b7280",
-                          }}
-                        />
-
-                        <h4 className="min-w-0 truncate text-sm font-semibold text-gray-900">
-                          {project.name}
-                        </h4>
-                      </div>
-
-                      <p className="text-xs text-gray-400">
-                        Created{" "}
-                        {new Date(project.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
           </div>
-        </main>
+
+          <div className="mb-5 space-y-3">
+            {" "}
+            {/* Search */}
+            <input
+              type="text"
+              value={projectSearch}
+              onChange={(e) => {
+                setProjectSearch(e.target.value);
+              }}
+              placeholder="Search projects..."
+              className="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            />
+            {/* Create Project */}
+            <form
+              onSubmit={handleCreateProject}
+              className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center"
+            >
+              <input
+                type="text"
+                value={projectName}
+                onChange={(e) => {
+                  setProjectName(e.target.value);
+                }}
+                placeholder="Project name"
+                className="h-10 min-w-0 flex-1 rounded-lg border border-gray-300 px-4 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              />
+
+              <input
+                type="color"
+                value={projectColor}
+                onChange={(e) => {
+                  setProjectColor(e.target.value);
+                }}
+                className="h-10 w-14 shrink-0 cursor-pointer rounded-lg border border-gray-300"
+              />
+
+              <button
+                type="submit"
+                disabled={isCreating || !projectName.trim()}
+                className="h-10 shrink-0 rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isCreating ? "Creating..." : "Create Project"}
+              </button>
+            </form>
+          </div>
+
+          {/* Error */}
+
+          {error && (
+            <p className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+              {error}
+            </p>
+          )}
+
+          {/* Projects */}
+
+          {isLoading ? (
+            <p className="text-sm text-gray-500">Loading projects...</p>
+          ) : projects.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
+              <p className="font-medium text-gray-700">No projects yet</p>
+
+              <p className="mt-1 text-sm text-gray-500">
+                Create your first project above.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {projects.map((project) => (
+                <div
+                  key={project.id}
+                  onClick={() => navigate(`/projects/${project.id}`)}
+                  className="cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
+                >
+                  <div className="mb-3 flex items-center gap-3">
+                    <div
+                      className="h-3 w-3 shrink-0 rounded-full"
+                      style={{
+                        backgroundColor: project.color || "#6b7280",
+                      }}
+                    />
+
+                    <h4 className="min-w-0 truncate text-sm font-semibold text-gray-900">
+                      {project.name}
+                    </h4>
+                  </div>
+
+                  <p className="text-xs text-gray-400">
+                    Created {new Date(project.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
-    </div>
+    </>
   );
 }

@@ -9,9 +9,11 @@ import {
 
 import app from "../src/app.js";
 import prisma from "../src/config/prisma.js";
+import { assertTestDatabase } from "./assertTestDatabase.js";
 
 describe("Task Query API", () => {
     beforeEach(async () => {
+        await assertTestDatabase(prisma);
         await prisma.task.deleteMany();
         await prisma.project.deleteMany();
         await prisma.label.deleteMany();

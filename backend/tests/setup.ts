@@ -5,9 +5,9 @@ dotenv.config({
     override: true
 });
 
+process.env.NODE_ENV = "test";
+
 if (!process.env.TEST_DATABASE_URL) {
     throw new Error("TEST_DATABASE_URL is not defined");
 }
 
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-process.env.NODE_ENV = "test";

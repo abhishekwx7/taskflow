@@ -243,275 +243,287 @@ export default function Tasks() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
-      <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
+    <div className="min-h-screen bg-gray-100">
+      <div className="mx-auto max-w-6xl px-6 py-6 lg:px-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            All Tasks
+          </h1>
 
-      <p className="mt-2 text-gray-500">All tasks across your projects</p>
-
-      {error && (
-        <p className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</p>
-      )}
-
-      <div className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-        <div className="flex flex-wrap items-center gap-3">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search tasks..."
-            className="w-64 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-gray-500 focus:ring-2 focus:ring-gray-200"
-          />
-
-          <select
-            value={status}
-            onChange={(e) =>
-              setStatus(e.target.value as "all" | "pending" | "completed")
-            }
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition hover:bg-gray-50 focus:border-gray-500 focus:ring-2 focus:ring-gray-200"
-          >
-            <option value="all">All tasks</option>
-            <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
-          </select>
-
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value as TaskSort)}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition hover:bg-gray-50 focus:border-gray-500 focus:ring-2 focus:ring-gray-200"
-          >
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-            <option value="dueDateAsc">Due date: earliest</option>
-            <option value="dueDateDesc">Due date: latest</option>
-            <option value="nameAsc">Name A - Z</option>
-            <option value="nameDesc">Name Z - A</option>
-          </select>
+          <p className="mt-1 text-sm text-gray-500">
+            Manage tasks across all your projects.
+          </p>
         </div>
 
-        {labels.length > 0 && (
-          <div className="mt-5 border-t border-gray-200 pt-4">
-            <p className="mb-3 text-sm font-medium text-gray-500">
-              Filter by label
-            </p>
+        {error && (
+          <p className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</p>
+        )}
 
-            <div className="flex flex-wrap gap-2">
-              {labels.map((label) => {
-                const isSelected = selectedLabelIds.includes(label.id);
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search tasks..."
+              className="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:w-64"
+            />
 
-                return (
+            <select
+              value={status}
+              onChange={(e) =>
+                setStatus(e.target.value as "all" | "pending" | "completed")
+              }
+              className="h-10 rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition hover:bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            >
+              <option value="all">All tasks</option>
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+            </select>
+
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as TaskSort)}
+              className="h-10 rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition hover:bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            >
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="dueDateAsc">Due date: earliest</option>
+              <option value="dueDateDesc">Due date: latest</option>
+              <option value="nameAsc">Name A - Z</option>
+              <option value="nameDesc">Name Z - A</option>
+            </select>
+          </div>
+
+          {labels.length > 0 && (
+            <div className="mt-4 border-t border-gray-200 pt-4">
+              <p className="mb-3 text-sm font-medium text-gray-500">
+                Filter by label
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {labels.map((label) => {
+                  const isSelected = selectedLabelIds.includes(label.id);
+
+                  return (
+                    <button
+                      key={label.id}
+                      type="button"
+                      onClick={() => toggleLabel(label.id)}
+                      className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+                        isSelected
+                          ? "border-blue-200 bg-blue-50 text-blue-700"
+                          : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+                      }`}
+                    >
+                      {label.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-5 space-y-3">
+          {tasks.map((task) => (
+            <div
+              key={task.id}
+              className={`rounded-xl border p-4 shadow-sm transition-colors ${
+                task.isCompleted
+                  ? "border-green-200 bg-green-50"
+                  : "border-gray-200 bg-white"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={task.isCompleted}
+                    onChange={() => handleToggleTask(task)}
+                    className="mt-1 h-4 w-4"
+                  />
+
+                  <div className="flex-1">
+                    <p
+                      className={`font-medium ${
+                        task.isCompleted
+                          ? "text-gray-400 line-through"
+                          : "text-gray-900"
+                      }`}
+                    >
+                      {task.name}
+                    </p>
+
+                    <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="h-2.5 w-2.5 rounded-full"
+                          style={{
+                            backgroundColor: task.project.color ?? "#94a3b8",
+                          }}
+                        />
+
+                        <span>{task.project.name}</span>
+                      </div>
+
+                      {task.labels.map((label) => (
+                        <span
+                          key={label.id}
+                          className="rounded-full px-2 py-1 text-xs text-white"
+                          style={{
+                            backgroundColor: label.color ?? "#6b7280",
+                          }}
+                        >
+                          {label.name}
+                        </span>
+                      ))}
+                    </div>
+
+                    {task.dueDate && (
+                      <p className="mt-2 text-sm text-gray-500">
+                        Due: {new Date(task.dueDate).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
                   <button
-                    key={label.id}
                     type="button"
-                    onClick={() => toggleLabel(label.id)}
-                    className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
-                      isSelected
-                        ? "border-gray-900 bg-gray-900 text-white shadow-sm"
-                        : "border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50"
-                    }`}
+                    onClick={() => openEditDialog(task)}
+                    className="h-9 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
                   >
-                    {label.name}
+                    Edit
                   </button>
-                );
-              })}
+
+                  <button
+                    type="button"
+                    onClick={() => setTaskToDelete(task)}
+                    className="h-9 rounded-lg border border-red-200 bg-red-50 px-3 text-sm font-medium text-red-600 transition-colors hover:bg-red-100"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {pagination.totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={() => setPage((prev) => prev - 1)}
+              disabled={page == 1}
+              className="h-9 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Previous
+            </button>
+
+            <span className="text-sm text-gray-600">
+              Page {pagination.page} of {pagination.totalPages}
+            </span>
+
+            <button
+              type="button"
+              onClick={() => setPage((prev) => prev + 1)}
+              disabled={page === pagination.totalPages}
+              className="h-9 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
+
+        {taskToDelete && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/40">
+            <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-lg">
+              <h2 className="text-lg font-semibold">Delete task?</h2>
+
+              <p className="mt-2 text-sm text-gray-600">
+                Are you sure you want to delete "{taskToDelete.name}"?
+              </p>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setTaskToDelete(null)}
+                  disabled={isDeleting}
+                  className="rounded border px-4 py-2"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDeleteTask}
+                  disabled={isDeleting}
+                  className="rounded bg-red-600 px-4 py-2 text-white disabled:opacity-50"
+                >
+                  {isDeleting ? "Deleting..." : "Delete"}
+                </button>
+              </div>
             </div>
           </div>
         )}
-      </div>
 
-      <div className="mt-8 space-y-3">
-        {tasks.map((task) => (
-          <div
-            key={task.id}
-            className="rounded-lg border bg-white p-4 shadow-sm"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex items-start gap-3">
+        {taskToEdit && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/40">
+            <form
+              onSubmit={handleEditTask}
+              className="w-full max-w-sm rounded-lg bg-white p-6 shadow-lg"
+            >
+              <h2 className="text-lg font-semibold">Edit Task</h2>
+
+              <div className="mt-4">
+                <label className="mb-1 block text-sm font-medium">
+                  Task name
+                </label>
+
                 <input
-                  type="checkbox"
-                  checked={task.isCompleted}
-                  onChange={() => handleToggleTask(task)}
-                  className="mt-1 h-4 w-4"
+                  type="text"
+                  value={editTaskName}
+                  onChange={(e) => setEditTaskName(e.target.value)}
+                  className="w-full rounded border px-3 py-2"
                 />
-
-                <div className="flex-1">
-                  <p
-                    className={`font-medium ${
-                      task.isCompleted
-                        ? "text-gray-400 line-through"
-                        : "text-gray-900"
-                    }`}
-                  >
-                    {task.name}
-                  </p>
-
-                  <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-500">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="h-2.5 w-2.5 rounded-full"
-                        style={{
-                          backgroundColor: task.project.color ?? "#94a3b8",
-                        }}
-                      />
-
-                      <span>{task.project.name}</span>
-                    </div>
-
-                    {task.labels.map((label) => (
-                      <span
-                        key={label.id}
-                        className="rounded-full px-2 py-1 text-xs text-white"
-                        style={{
-                          backgroundColor: label.color ?? "#6b7280",
-                        }}
-                      >
-                        {label.name}
-                      </span>
-                    ))}
-                  </div>
-
-                  {task.dueDate && (
-                    <p className="mt-2 text-sm text-gray-500">
-                      Due: {new Date(task.dueDate).toLocaleDateString()}
-                    </p>
-                  )}
-                </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="mt-4">
+                <label className="mb-1 block text-sm font-medium">
+                  Due Date
+                </label>
+
+                <input
+                  type="date"
+                  value={editDueDate}
+                  onChange={(e) => setEditDueDate(e.target.value)}
+                  className="w-full rounded border px-3 py-2"
+                />
+              </div>
+
+              <div className="mt-6 flex justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => openEditDialog(task)}
-                  className="rounded bg-blue-500 px-3 py-1 text-sm text-white"
+                  onClick={() => setTaskToEdit(null)}
+                  disabled={isUpdating}
+                  className="rounded border px-4 py-2"
                 >
-                  Edit
+                  Cancel
                 </button>
 
                 <button
-                  type="button"
-                  onClick={() => setTaskToDelete(task)}
-                  className="rounded bg-red-500 px-3 py-1 text-sm text-white"
+                  type="submit"
+                  disabled={isUpdating || !editTaskName.trim()}
+                  className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
                 >
-                  Delete
+                  {isUpdating ? "Saving..." : "Save"}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
-        ))}
+        )}
       </div>
-
-      {pagination.totalPages > 1 && (
-        <div className="mt-6 flex items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={() => setPage((prev) => prev - 1)}
-            disabled={page == 1}
-            className="rounded border bg-white px-4 py-2 text-sm 
-            disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Previous
-          </button>
-
-          <span className="text-sm text-gray-600">
-            Page {pagination.page} of {pagination.totalPages}
-          </span>
-
-          <button
-            type="button"
-            onClick={() => setPage((prev) => prev + 1)}
-            disabled={page === pagination.totalPages}
-            className="rounded border bg-white px-4 py-2 text-sm 
-            disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-      )}
-
-      {taskToDelete && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-lg">
-            <h2 className="text-lg font-semibold">Delete task?</h2>
-
-            <p className="mt-2 text-sm text-gray-600">
-              Are you sure you want to delete "{taskToDelete.name}"?
-            </p>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setTaskToDelete(null)}
-                disabled={isDeleting}
-                className="rounded border px-4 py-2"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="button"
-                onClick={handleDeleteTask}
-                disabled={isDeleting}
-                className="rounded bg-red-600 px-4 py-2 text-white disabled:opacity-50"
-              >
-                {isDeleting ? "Deleting..." : "Delete"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {taskToEdit && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40">
-          <form
-            onSubmit={handleEditTask}
-            className="w-full max-w-sm rounded-lg bg-white p-6 shadow-lg"
-          >
-            <h2 className="text-lg font-semibold">Edit Task</h2>
-
-            <div className="mt-4">
-              <label className="mb-1 block text-sm font-medium">
-                Task name
-              </label>
-
-              <input
-                type="text"
-                value={editTaskName}
-                onChange={(e) => setEditTaskName(e.target.value)}
-                className="w-full rounded border px-3 py-2"
-              />
-            </div>
-
-            <div className="mt-4">
-              <label className="mb-1 block text-sm font-medium">Due Date</label>
-
-              <input
-                type="date"
-                value={editDueDate}
-                onChange={(e) => setEditDueDate(e.target.value)}
-                className="w-full rounded border px-3 py-2"
-              />
-            </div>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setTaskToEdit(null)}
-                disabled={isUpdating}
-                className="rounded border px-4 py-2"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                disabled={isUpdating || !editTaskName.trim()}
-                className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
-              >
-                {isUpdating ? "Saving..." : "Save"}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
     </div>
   );
 }

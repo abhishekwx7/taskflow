@@ -148,14 +148,14 @@ export default function Dashboard() {
   }
 
   return (
-    <>
-      <header className="border-b border-gray-200 bg-white">
+    <div className="min-h-screen bg-[#111318]">
+      <header className="border-b border-[#343941] bg-[#191C22]">
         <div className="mx-auto max-w-6xl px-6 py-6 lg:px-8">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+          <h2 className="text-2xl font-bold tracking-tight text-[#F4F4F5]">
             {greeting}, {user?.name} 👋
           </h2>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-[#A1A1AA]">
             Manage your projects and stay organized.
           </p>
         </div>
@@ -165,26 +165,26 @@ export default function Dashboard() {
         {/* Dashboard Stats */}
 
         <div className="mb-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
-            <p className="text-sm font-medium text-gray-500">Projects</p>
+          <div className="rounded-xl border border-[#343941] bg-[#22262E] px-5 py-4">
+            <p className="text-sm font-medium text-[#A1A1AA]">Projects</p>
 
-            <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
+            <p className="mt-2 text-3xl font-bold tracking-tight text-[#F4F4F5]">
               {projects.length}
             </p>
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <p className="text-sm font-medium text-gray-500">Total Tasks</p>
+          <div className="rounded-xl border border-[#343941] bg-[#22262E] px-5 py-4">
+            <p className="text-sm font-medium text-[#A1A1AA]">Total Tasks</p>
 
-            <p className="mt-3 text-3xl font-bold tracking-tight text-gray-900">
+            <p className="mt-3 text-3xl font-bold tracking-tight text-[#F4F4F5]">
               {totalTasks}
             </p>
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <p className="text-sm font-medium text-gray-500">Completed</p>
+          <div className="rounded-xl border border-[#343941] bg-[#22262E] px-5 py-4">
+            <p className="text-sm font-medium text-[#A1A1AA]">Completed</p>
 
-            <p className="mt-3 text-3xl font-bold tracking-tight text-gray-900">
+            <p className="mt-3 text-3xl font-bold tracking-tight text-[#F4F4F5]">
               {completedTasks}
             </p>
           </div>
@@ -195,7 +195,7 @@ export default function Dashboard() {
         <section>
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900">Projects</h3>
+              <h3 className="text-xl font-semibold text-[#F4F4F5]">Projects</h3>
               <p className="mt-1 text-sm text-gray-500">
                 Your current projects
               </p>
@@ -212,12 +212,12 @@ export default function Dashboard() {
                 setProjectSearch(e.target.value);
               }}
               placeholder="Search projects..."
-              className="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="h-10 w-full rounded-lg border border-[#343941] bg-[#22262E] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
             />
             {/* Create Project */}
             <form
               onSubmit={handleCreateProject}
-              className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center"
+              className="flex flex-col gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3 sm:flex-row sm:items-center"
             >
               <input
                 type="text"
@@ -226,7 +226,7 @@ export default function Dashboard() {
                   setProjectName(e.target.value);
                 }}
                 placeholder="Project name"
-                className="h-10 min-w-0 flex-1 rounded-lg border border-gray-300 px-4 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="h-10 min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
               />
 
               <input
@@ -235,13 +235,13 @@ export default function Dashboard() {
                 onChange={(e) => {
                   setProjectColor(e.target.value);
                 }}
-                className="h-10 w-14 shrink-0 cursor-pointer rounded-lg border border-gray-300"
+                className="h-10 w-14 shrink-0 cursor-pointer rounded-lg border border-[#343941] bg-[#191C22] p-1"
               />
 
               <button
                 type="submit"
                 disabled={isCreating || !projectName.trim()}
-                className="h-10 shrink-0 rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="h-10 shrink-0 rounded-lg bg-[#F4F4F5] px-4 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isCreating ? "Creating..." : "Create Project"}
               </button>
@@ -251,7 +251,7 @@ export default function Dashboard() {
           {/* Error */}
 
           {error && (
-            <p className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+            <p className="mb-5 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
               {error}
             </p>
           )}
@@ -274,7 +274,7 @@ export default function Dashboard() {
                 <div
                   key={project.id}
                   onClick={() => navigate(`/projects/${project.id}`)}
-                  className="cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
+                  className="cursor-pointer rounded-xl border border-[#343941] bg-[#22262E] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#525866] hover:bg-[#292E38]"
                 >
                   <div className="mb-3 flex items-center gap-3">
                     <div
@@ -284,12 +284,12 @@ export default function Dashboard() {
                       }}
                     />
 
-                    <h4 className="min-w-0 truncate text-sm font-semibold text-gray-900">
+                    <h4 className="min-w-0 truncate text-sm font-semibold text-[#F4F4F5]">
                       {project.name}
                     </h4>
                   </div>
 
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-[#A1A1AA]">
                     Created {new Date(project.createdAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -298,6 +298,6 @@ export default function Dashboard() {
           )}
         </section>
       </div>
-    </>
+    </div>
   );
 }

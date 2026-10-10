@@ -7,15 +7,15 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-gray-200 bg-white">
+    <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-[#343941] bg-[#191C22]">
       {/* Branding */}
-      <div className="flex items-center gap-3 border-b border-gray-200 px-5 py-5">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600">
+      <div className="flex items-center gap-3 border-b border-[#343941] px-5 py-5">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#303642]">
           <CheckCheck className="h-5 w-5 text-white" />
         </div>
 
         <div>
-          <h1 className="text-lg font-bold tracking-tight text-gray-900">
+          <h1 className="text-lg font-bold tracking-tight text-[#F4F4F5]">
             TaskFlow
           </h1>
           <p className="text-xs text-gray-500">Project Management</p>
@@ -36,8 +36,8 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  ? "bg-[#303642] text-[#F4F4F5]"
+                  : "text-[#A1A1AA] hover:bg-[#272B33] hover:text-[#F4F4F5]"
               }`
             }
           >
@@ -63,10 +63,10 @@ export default function Sidebar() {
       </nav>
 
       {/* Account and Logout */}
-      <div className="mt-auto border-t border-gray-200 p-3">
+      <div className="mt-auto border-t border-[#343941] p-3">
         {user && (
           <div className="mb-3 flex items-center gap-3 rounded-lg px-3 py-2">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#303642] text-xs font-semibold text-[#F4F4F5]">
               {user.name
                 .trim()
                 .split(/\s+/)
@@ -77,7 +77,7 @@ export default function Sidebar() {
             </div>
 
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-gray-900">
+              <p className="truncate text-sm font-semibold text-[#858B98]">
                 {user.name}
               </p>
               <p className="text-xs text-gray-500">My Workspace</p>
@@ -88,7 +88,7 @@ export default function Sidebar() {
         <button
           type="button"
           onClick={logout}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600"
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-[#A1A1AA] transition-colors hover:bg-red-500/10 hover:text-red-400"
         >
           <LogOut className="h-4 w-4" />
           Log out

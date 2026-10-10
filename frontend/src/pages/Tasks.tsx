@@ -243,14 +243,14 @@ export default function Tasks() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[#111318]">
       <div className="mx-auto max-w-6xl px-6 py-6 lg:px-8">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-2xl font-bold tracking-tight text-[#F4F4F5]">
             All Tasks
           </h1>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-[#A1A1AA]">
             Manage tasks across all your projects.
           </p>
         </div>
@@ -259,14 +259,14 @@ export default function Tasks() {
           <p className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</p>
         )}
 
-        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-[#343941] bg-[#22262E] p-4">
           <div className="flex flex-wrap items-center gap-3">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search tasks..."
-              className="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:w-64"
+              className="h-10 w-full rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 sm:w-64"
             />
 
             <select
@@ -274,7 +274,7 @@ export default function Tasks() {
               onChange={(e) =>
                 setStatus(e.target.value as "all" | "pending" | "completed")
               }
-              className="h-10 rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition hover:bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="h-10 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] outline-none transition-colors hover:bg-[#292E38] focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
             >
               <option value="all">All tasks</option>
               <option value="pending">Pending</option>
@@ -284,7 +284,7 @@ export default function Tasks() {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as TaskSort)}
-              className="h-10 rounded-lg border border-gray-300 bg-white px-4 text-sm outline-none transition hover:bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="h-10 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] outline-none transition-colors hover:bg-[#292E38] focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
@@ -296,7 +296,7 @@ export default function Tasks() {
           </div>
 
           {labels.length > 0 && (
-            <div className="mt-4 border-t border-gray-200 pt-4">
+            <div className="mt-4 border-t border-[#343941] pt-4">
               <p className="mb-3 text-sm font-medium text-gray-500">
                 Filter by label
               </p>
@@ -312,8 +312,8 @@ export default function Tasks() {
                       onClick={() => toggleLabel(label.id)}
                       className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
                         isSelected
-                          ? "border-blue-200 bg-blue-50 text-blue-700"
-                          : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+                          ? "border-[#818CF8] bg-[#818CF8]/15 text-[#C7D2FE]"
+                          : "border-[#343941] bg-[#191C22] text-[#A1A1AA] hover:border-[#626A79] hover:bg-[#292E38] hover:text-[#F4F4F5]"
                       }`}
                     >
                       {label.name}
@@ -329,10 +329,10 @@ export default function Tasks() {
           {tasks.map((task) => (
             <div
               key={task.id}
-              className={`rounded-xl border p-4 shadow-sm transition-colors ${
+              className={`rounded-xl border p-4 transition-colors duration-200 ${
                 task.isCompleted
-                  ? "border-green-200 bg-green-50"
-                  : "border-gray-200 bg-white"
+                  ? "border-emerald-500/25 bg-emerald-500/5"
+                  : "border-[#343941] bg-[#22262E] hover:border-[#525866]"
               }`}
             >
               <div className="flex items-start justify-between gap-4">
@@ -341,21 +341,21 @@ export default function Tasks() {
                     type="checkbox"
                     checked={task.isCompleted}
                     onChange={() => handleToggleTask(task)}
-                    className="mt-1 h-4 w-4"
+                    className="mt-1 h-4 w-4 cursor-pointer accent-emerald-500"
                   />
 
                   <div className="flex-1">
                     <p
                       className={`font-medium ${
                         task.isCompleted
-                          ? "text-gray-400 line-through"
-                          : "text-gray-900"
+                          ? "text-[#858B98] line-through"
+                          : "text-[#F4F4F5]"
                       }`}
                     >
                       {task.name}
                     </p>
 
-                    <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                    <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-[#A1A1AA]">
                       <div className="flex items-center gap-2">
                         <span
                           className="h-2.5 w-2.5 rounded-full"
@@ -392,7 +392,7 @@ export default function Tasks() {
                   <button
                     type="button"
                     onClick={() => openEditDialog(task)}
-                    className="h-9 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                    className="h-9 rounded-lg border border-[#343941] bg-[#191C22] px-3 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642] hover:border-[#626A79]"
                   >
                     Edit
                   </button>
@@ -400,7 +400,7 @@ export default function Tasks() {
                   <button
                     type="button"
                     onClick={() => setTaskToDelete(task)}
-                    className="h-9 rounded-lg border border-red-200 bg-red-50 px-3 text-sm font-medium text-red-600 transition-colors hover:bg-red-100"
+                    className="h-9 rounded-lg border border-red-500/25 bg-red-500/10 px-3 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20"
                   >
                     Delete
                   </button>
@@ -416,12 +416,12 @@ export default function Tasks() {
               type="button"
               onClick={() => setPage((prev) => prev - 1)}
               disabled={page == 1}
-              className="h-9 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-9 rounded-lg border border-[#343941] bg-[#22262E] px-4 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642] disabled:cursor-not-allowed disabled:opacity-40"
             >
               Previous
             </button>
 
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-[#A1A1AA]">
               Page {pagination.page} of {pagination.totalPages}
             </span>
 
@@ -429,7 +429,7 @@ export default function Tasks() {
               type="button"
               onClick={() => setPage((prev) => prev + 1)}
               disabled={page === pagination.totalPages}
-              className="h-9 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-9 rounded-lg border border-[#343941] bg-[#22262E] px-4 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642] disabled:cursor-not-allowed disabled:opacity-40"
             >
               Next
             </button>
@@ -437,11 +437,13 @@ export default function Tasks() {
         )}
 
         {taskToDelete && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black/40">
-            <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-lg">
-              <h2 className="text-lg font-semibold">Delete task?</h2>
+          <div className="fixed inset-0 flex items-center justify-center bg-black/70">
+            <div className="w-full max-w-sm rounded-xl border border-[#343941] bg-[#22262E] p-6 shadow-2xl">
+              <h2 className="text-lg font-semibold text-[#F4F4F5]">
+                Delete task?
+              </h2>
 
-              <p className="mt-2 text-sm text-gray-600">
+              <p className="mt-2 text-sm text-[#A1A1AA]">
                 Are you sure you want to delete "{taskToDelete.name}"?
               </p>
 
@@ -450,7 +452,7 @@ export default function Tasks() {
                   type="button"
                   onClick={() => setTaskToDelete(null)}
                   disabled={isDeleting}
-                  className="rounded border px-4 py-2"
+                  className="rounded-lg border border-[#343941] bg-[#191C22] px-4 py-2 text-sm font-medium text-[#F4F4F5] hover:bg-[#303642] disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -459,7 +461,7 @@ export default function Tasks() {
                   type="button"
                   onClick={handleDeleteTask}
                   disabled={isDeleting}
-                  className="rounded bg-red-600 px-4 py-2 text-white disabled:opacity-50"
+                  className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
                 >
                   {isDeleting ? "Deleting..." : "Delete"}
                 </button>
@@ -472,12 +474,14 @@ export default function Tasks() {
           <div className="fixed inset-0 flex items-center justify-center bg-black/40">
             <form
               onSubmit={handleEditTask}
-              className="w-full max-w-sm rounded-lg bg-white p-6 shadow-lg"
+              className="w-full max-w-sm rounded-xl border border-[#343941] bg-[#22262E] p-6 shadow-2xl"
             >
-              <h2 className="text-lg font-semibold">Edit Task</h2>
+              <h2 className="text-lg font-semibold text-[#F4F4F5]">
+                Edit Task
+              </h2>
 
               <div className="mt-4">
-                <label className="mb-1 block text-sm font-medium">
+                <label className="mb-1 block text-sm font-medium text-[#F4F4F5]">
                   Task name
                 </label>
 
@@ -485,12 +489,12 @@ export default function Tasks() {
                   type="text"
                   value={editTaskName}
                   onChange={(e) => setEditTaskName(e.target.value)}
-                  className="w-full rounded border px-3 py-2"
+                  className="w-full rounded-lg border border-[#343941] bg-[#191C22] px-3 py-2 text-sm text-[#F4F4F5] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
                 />
               </div>
 
               <div className="mt-4">
-                <label className="mb-1 block text-sm font-medium">
+                <label className="mb-1 block text-sm font-medium text-[#F4F4F5]">
                   Due Date
                 </label>
 
@@ -498,7 +502,7 @@ export default function Tasks() {
                   type="date"
                   value={editDueDate}
                   onChange={(e) => setEditDueDate(e.target.value)}
-                  className="w-full rounded border px-3 py-2"
+                  className="scheme-dark w-full rounded-lg border border-[#343941] bg-[#191C22] px-3 py-2 text-sm text-[#F4F4F5] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
                 />
               </div>
 
@@ -507,7 +511,7 @@ export default function Tasks() {
                   type="button"
                   onClick={() => setTaskToEdit(null)}
                   disabled={isUpdating}
-                  className="rounded border px-4 py-2"
+                  className="rounded-lg border border-[#343941] bg-[#191C22] px-4 py-2 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642] disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -515,7 +519,7 @@ export default function Tasks() {
                 <button
                   type="submit"
                   disabled={isUpdating || !editTaskName.trim()}
-                  className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+                  className="rounded-lg bg-[#F4F4F5] px-4 py-2 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:opacity-50"
                 >
                   {isUpdating ? "Saving..." : "Save"}
                 </button>

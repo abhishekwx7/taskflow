@@ -341,7 +341,7 @@ export default function Tasks() {
                     type="checkbox"
                     checked={task.isCompleted}
                     onChange={() => handleToggleTask(task)}
-                    className="mt-1 h-4 w-4 cursor-pointer accent-emerald-500"
+                    className="mt-1 h-4 w-4 shrink-0 cursor-pointer appearance-none rounded border border-[#626A79] bg-[#191C22] transition-colors checked:border-emerald-500 checked:bg-emerald-500 checked:after:block checked:after:text-center checked:after:text-[11px] checked:after:font-bold checked:after:leading-[14px] checked:after:text-[#111318] checked:after:content-['✓'] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
                   />
 
                   <div className="flex-1">

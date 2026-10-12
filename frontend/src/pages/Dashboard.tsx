@@ -150,8 +150,8 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#111318]">
       <header className="border-b border-[#343941] bg-[#191C22]">
-        <div className="mx-auto max-w-6xl px-6 py-6 lg:px-8">
-          <h2 className="text-2xl font-bold tracking-tight text-[#F4F4F5]">
+        <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+          <h2 className="break-words text-xl font-bold tracking-tight text-[#F4F4F5] sm:text-2xl">
             {greeting}, {user?.name} 👋
           </h2>
 
@@ -161,7 +161,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-6 py-4 lg:px-8">
+      <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 lg:px-8">
         {/* Dashboard Stats */}
 
         <div className="mb-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -217,7 +217,7 @@ export default function Dashboard() {
             {/* Create Project */}
             <form
               onSubmit={handleCreateProject}
-              className="flex flex-col gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3 sm:flex-row sm:items-center"
+              className="grid grid-cols-[auto_minmax(0,1fr)] gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3 sm:flex sm:items-center"
             >
               <input
                 type="text"
@@ -226,7 +226,7 @@ export default function Dashboard() {
                   setProjectName(e.target.value);
                 }}
                 placeholder="Project name"
-                className="h-10 min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
+                className="col-span-2 h-10 min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 sm:col-auto"
               />
 
               <input
@@ -241,7 +241,7 @@ export default function Dashboard() {
               <button
                 type="submit"
                 disabled={isCreating || !projectName.trim()}
-                className="h-10 shrink-0 rounded-lg bg-[#F4F4F5] px-4 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50"
+                className="h-10 w-full shrink-0 rounded-lg bg-[#F4F4F5] px-4 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
               >
                 {isCreating ? "Creating..." : "Create Project"}
               </button>
@@ -261,10 +261,10 @@ export default function Dashboard() {
           {isLoading ? (
             <p className="text-sm text-gray-500">Loading projects...</p>
           ) : projects.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
-              <p className="font-medium text-gray-700">No projects yet</p>
+            <div className="rounded-xl border border-dashed border-[#343941] bg-[#22262E] px-4 py-8 text-center sm:px-6 sm:py-10">
+              <p className="font-medium text-[#F4F4F5]">No projects yet</p>
 
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-[#A1A1AA]">
                 Create your first project above.
               </p>
             </div>

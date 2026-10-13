@@ -181,7 +181,7 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <div className="rounded-xl border border-[#343941] bg-[#22262E] px-5 py-4">
+          <div className="rounded-xl border border-[#343941] bg-[#22262E] px-5 py-4 sm:col-span-2 lg:col-span-1">
             <p className="text-sm font-medium text-[#A1A1AA]">Completed</p>
 
             <p className="mt-3 text-3xl font-bold tracking-tight text-[#F4F4F5]">
@@ -193,7 +193,7 @@ export default function Dashboard() {
         {/* PROJECTS */}
 
         <section>
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <div>
               <h3 className="text-xl font-semibold text-[#F4F4F5]">Projects</h3>
               <p className="mt-1 text-sm text-gray-500">
@@ -212,12 +212,12 @@ export default function Dashboard() {
                 setProjectSearch(e.target.value);
               }}
               placeholder="Search projects..."
-              className="h-10 w-full rounded-lg border border-[#343941] bg-[#22262E] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
+              className="h-11 w-full sm:h-10 rounded-lg border border-[#343941] bg-[#22262E] px-4 text-base sm:text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
             />
             {/* Create Project */}
             <form
               onSubmit={handleCreateProject}
-              className="grid grid-cols-[auto_minmax(0,1fr)] gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3 sm:flex sm:items-center"
+              className="grid grid-cols-[auto_minmax(0,1fr)] gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3 lg:flex lg:items-center"
             >
               <input
                 type="text"
@@ -226,7 +226,7 @@ export default function Dashboard() {
                   setProjectName(e.target.value);
                 }}
                 placeholder="Project name"
-                className="col-span-2 h-10 min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 sm:col-auto"
+                className="col-span-2 h-10 min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 lg:col-auto"
               />
 
               <input
@@ -235,13 +235,13 @@ export default function Dashboard() {
                 onChange={(e) => {
                   setProjectColor(e.target.value);
                 }}
-                className="h-10 w-14 shrink-0 cursor-pointer rounded-lg border border-[#343941] bg-[#191C22] p-1"
+                className="h-11 sm:h-10 w-14 shrink-0 cursor-pointer rounded-lg border border-[#343941] bg-[#191C22] p-1"
               />
 
               <button
                 type="submit"
                 disabled={isCreating || !projectName.trim()}
-                className="h-10 w-full shrink-0 rounded-lg bg-[#F4F4F5] px-4 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                className="h-11 w-full shrink-0 sm:h-10 rounded-lg bg-[#F4F4F5] px-4 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50 lg:w-auto"
               >
                 {isCreating ? "Creating..." : "Create Project"}
               </button>
@@ -269,7 +269,7 @@ export default function Dashboard() {
               </p>
             </div>
           ) : (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {projects.map((project) => (
                 <div
                   key={project.id}

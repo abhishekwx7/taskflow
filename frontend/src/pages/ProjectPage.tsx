@@ -396,10 +396,12 @@ export default function ProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#111318]">
-      <div className="mx-auto max-w-6xl px-6 py-6 lg:px-8">
+    <div className="min-h-screen min-w-0 bg-[#111318]">
+      <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
         <div className="mb-6">
-          <h1 className="mb-6 text-2xl font-bold text-[#F4F4F5]">Tasks</h1>
+          <h1 className="mb-3 text-xl font-bold text-[#F4F4F5] sm:text-2xl">
+            Tasks
+          </h1>
           <p className="mt-1 text-sm text-[#A1A1AA]">
             Manage tasks, due dates, and labels for this project.
           </p>
@@ -421,21 +423,21 @@ export default function ProjectPage() {
         )}
         <form
           onSubmit={handleCreateTask}
-          className="mb-6 flex flex-col gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3 sm:flex-row sm:items-center"
+          className="mb-6 grid grid-cols-[minmax(0,1fr)_auto] gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3 sm:flex sm:items-center"
         >
           <input
             type="text"
             value={taskName}
             onChange={(e) => setTaskName(e.target.value)}
             placeholder="Task Name"
-            className="h-10 min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
+            className="col-span-2 h-10 min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 sm:col-auto"
           />
 
           <input
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="scheme-dark h-10 min-w-0 rounded-lg border border-[#343941] bg-[#191C22] px-3 text-sm text-[#F4F4F5] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 sm:w-44"
+            className="scheme-dark h-10 w-full min-w-0 rounded-lg border border-[#343941] bg-[#191C22] px-3 text-sm text-[#F4F4F5] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 sm:w-44"
           />
 
           <button
@@ -446,7 +448,7 @@ export default function ProjectPage() {
             {isCreating ? "Creating..." : "Add Task"}
           </button>
         </form>
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div className="flex flex-wrap gap-2">
             <button
               type="button"

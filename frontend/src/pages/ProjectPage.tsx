@@ -448,6 +448,7 @@ export default function ProjectPage() {
             {isCreating ? "Creating..." : "Add Task"}
           </button>
         </form>
+
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div className="flex flex-wrap gap-2">
             <button
@@ -507,24 +508,24 @@ export default function ProjectPage() {
             </button>
           </div>
 
-          <div className="relative">
+          <div className="relative inline-block">
             <button
               type="button"
-              className="h-10 rounded-lg border border-[#343941] bg-[#22262E] px-4 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642]"
+              className="rounded-md border border-[#343941] bg-[#22262E] px-3 py-2 text-sm text-white"
               onClick={() => setIsSortOpen((prev) => !prev)}
             >
               Sort
             </button>
 
             {isSortOpen && (
-              <div className="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-lg border border-[#343941] bg-[#22262E] py-1 shadow-xl">
+              <div className="absolute left-0 z-20 mt-1 w-36 overflow-hidden rounded-md border border-[#343941] bg-[#22262E] py-0.5 shadow-xl">
                 <button
                   type="button"
                   onClick={() => {
                     setSort("newest");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-4 py-2.5 text-left text-sm text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
                 >
                   Newest
                 </button>
@@ -535,7 +536,7 @@ export default function ProjectPage() {
                     setSort("oldest");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-4 py-2.5 text-left text-sm text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
                 >
                   Oldest
                 </button>
@@ -546,7 +547,7 @@ export default function ProjectPage() {
                     setSort("dueDateAsc");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-4 py-2.5 text-left text-sm text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
                 >
                   Due date: earliest
                 </button>
@@ -557,7 +558,7 @@ export default function ProjectPage() {
                     setSort("dueDateDesc");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-4 py-2.5 text-left text-sm text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
                 >
                   Due date: latest
                 </button>
@@ -568,7 +569,7 @@ export default function ProjectPage() {
                     setSort("nameAsc");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-4 py-2.5 text-left text-sm text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
                 >
                   Name A-Z
                 </button>
@@ -579,7 +580,7 @@ export default function ProjectPage() {
                     setSort("nameDesc");
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-4 py-2.5 text-left text-sm text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
                 >
                   Name Z-A
                 </button>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { CheckCheck } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -64,22 +65,26 @@ export default function Landing() {
     );
 
   return (
-    <div
-      className="min-h-screen bg-[#0f1117] text-[#f4f5f8] antialiased"
-      style={{
-        fontFamily:
-          '"Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif',
-      }}
-    >
+    <div className="min-h-screen bg-[#0f1117] text-[#f4f5f8] antialiased">
       <div className="mx-auto w-full max-w-[1120px] px-4 sm:px-6 lg:px-8">
         {/* Nav */}
         <nav className="flex items-center justify-between gap-5 py-5 sm:py-7">
           <Link
             to="/"
-            className="shrink-0 text-xl font-bold tracking-tight sm:text-[22px]"
+            className="flex shrink-0 items-center gap-2 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500"
           >
-            TaskFlow
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#262a37]">
+              <CheckCheck
+                className="h-5 w-5 text-[#f4f5f8]"
+                aria-hidden="true"
+              />
+            </span>
+
+            <span className="text-xl font-bold tracking-tight sm:text-[22px]">
+              TaskFlow
+            </span>
           </Link>
+
           <div className="flex items-center gap-1 sm:gap-3">
             {isAuthenticated ? (
               <Link to="/dashboard" className={btn}>

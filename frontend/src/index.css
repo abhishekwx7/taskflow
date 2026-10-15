@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+body {
+  font-family:
+    "Bricolage Grotesque",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+}

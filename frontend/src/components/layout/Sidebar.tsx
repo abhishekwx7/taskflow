@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { LayoutDashboard, ListTodo, LogOut, CheckCheck, X } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
@@ -38,10 +38,17 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </div>
 
           <div>
-            <h1 className="text-lg font-bold tracking-tight text-[#F4F4F5]">
-              TaskFlow
-            </h1>
-            <p className="text-xs text-gray-500">Project Management</p>
+            <Link
+              to="/"
+              onClick={onClose}
+              className="flex flex-col gap-0.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500"
+            >
+              <h1 className="text-lg font-bold tracking-tight text-[#F4F4F5]">
+                TaskFlow
+              </h1>
+
+              <p className="text-xs text-gray-500">Project Management</p>
+            </Link>
           </div>
 
           <button

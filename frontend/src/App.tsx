@@ -1,10 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 
+import LandingPage from "./pages/LandingPage";
 import SignUpPage from "./pages/SignUp";
 import SignInPage from "./pages/SignIn";
-import LandingPage from "./pages/LandingPage";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicOnlyRoute from "./components/PublicOnlyRoute";
 import AppLayout from "./components/layout/AppLayout";
 
 import Dashboard from "./pages/Dashboard";
@@ -14,14 +15,17 @@ import Tasks from "./pages/Tasks";
 function App() {
   return (
     <Routes>
-      {/* Public routes */}
+      {/* Public landing page */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/signin" element={<SignInPage />} />
 
-      {/* Protected routes */}
+      {/* Only unauthenticated users */}
+      <Route element={<PublicOnlyRoute />}>
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/signin" element={<SignInPage />} />
+      </Route>
+
+      {/* Only authenticated users */}
       <Route element={<ProtectedRoute />}>
-        {/* Shared layout */}
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/tasks" element={<Tasks />} />

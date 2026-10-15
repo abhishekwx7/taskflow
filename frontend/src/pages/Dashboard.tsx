@@ -151,7 +151,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#111318]">
       <header className="border-b border-[#343941] bg-[#191C22]">
         <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
-          <h2 className="break-words text-xl font-bold tracking-tight text-[#F4F4F5] sm:text-2xl">
+          <h2 className="break-words text-2xl font-bold tracking-tight text-[#F4F4F5] sm:text-3xl">
             {greeting}, {user?.name} 👋
           </h2>
 

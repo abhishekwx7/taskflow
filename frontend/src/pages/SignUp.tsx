@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, replace, useNavigate } from "react-router-dom";
 
 export default function SignUpPage() {
   const { signup } = useAuth();
@@ -27,7 +27,7 @@ export default function SignUpPage() {
         password,
       });
 
-      navigate("/");
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
@@ -57,7 +57,9 @@ export default function SignUpPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium">Name</label>
+            <label className="mb-1 block text-sm font-medium text-[#E4E4E7]">
+              Name
+            </label>
 
             <input
               type="text"
@@ -70,7 +72,9 @@ export default function SignUpPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">Email</label>
+            <label className="mb-1 block text-sm font-medium text-[#E4E4E7]">
+              Email
+            </label>
 
             <input
               type="email"
@@ -83,7 +87,9 @@ export default function SignUpPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">Password</label>
+            <label className="mb-1 block text-sm font-medium text-[#E4E4E7]">
+              Password
+            </label>
 
             <input
               type="password"

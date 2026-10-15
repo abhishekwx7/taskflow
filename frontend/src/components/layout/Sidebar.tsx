@@ -63,8 +63,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="space-y-1">
             {/* Dashboard */}
             <NavLink
-              to="/"
-              end
+              to="/dashboard"
               onClick={onClose}
               className={({ isActive }) =>
                 `flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${

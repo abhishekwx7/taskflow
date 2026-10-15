@@ -25,7 +25,7 @@ export default function SigninPage() {
         password,
       });
 
-      navigate("/");
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =

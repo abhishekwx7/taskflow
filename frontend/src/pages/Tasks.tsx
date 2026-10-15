@@ -9,6 +9,7 @@ import { getLabels } from "../services/label.service";
 import type { Task } from "../types/task";
 import type { Label } from "../types/label";
 import axios from "axios";
+import { ChevronDown } from "lucide-react";
 
 interface TaskStats {
   completed: number;
@@ -228,8 +229,12 @@ export default function Tasks() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 p-10">
-        <p>Loading tasks...</p>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#111318]">
+        {/* Animated spinner */}
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#343941] border-t-blue-500" />
+
+        {/* Loading message */}
+        <p className="text-sm font-medium text-[#A1A1AA]">Loading tasks...</p>
       </div>
     );
   }
@@ -260,7 +265,7 @@ export default function Tasks() {
         )}
 
         <div className="rounded-xl border border-[#343941] bg-[#22262E] p-4">
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <input
               type="text"
               value={search}
@@ -269,30 +274,50 @@ export default function Tasks() {
               className="h-10 w-full rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 sm:w-64"
             />
 
-            <select
-              value={status}
-              onChange={(e) =>
-                setStatus(e.target.value as "all" | "pending" | "completed")
-              }
-              className="h-10 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] outline-none transition-colors hover:bg-[#292E38] focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
-            >
-              <option value="all">All tasks</option>
-              <option value="pending">Pending</option>
-              <option value="completed">Completed</option>
-            </select>
+            {/* Status Filter */}
+            <div className="relative w-full sm:w-36">
+              <select
+                aria-label="Filter tasks by status"
+                value={status}
+                onChange={(e) =>
+                  setStatus(e.target.value as "all" | "pending" | "completed")
+                }
+                className="h-10 w-full cursor-pointer appearance-none rounded-lg border border-[#343941] bg-[#191C22] pl-4 pr-10 text-sm font-medium text-[#F4F4F5] outline-none transition-colors hover:border-[#626A79] hover:bg-[#252A33] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="all">All tasks</option>
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+              </select>
 
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as TaskSort)}
-              className="h-10 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] outline-none transition-colors hover:bg-[#292E38] focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
-            >
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
-              <option value="dueDateAsc">Due date: earliest</option>
-              <option value="dueDateDesc">Due date: latest</option>
-              <option value="nameAsc">Name A - Z</option>
-              <option value="nameDesc">Name Z - A</option>
-            </select>
+              <ChevronDown
+                size={16}
+                aria-hidden="true"
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#A1A1AA]"
+              />
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="relative w-full sm:w-48">
+              <select
+                aria-label="Sort tasks"
+                value={sort}
+                onChange={(e) => setSort(e.target.value as TaskSort)}
+                className="h-10 w-full cursor-pointer appearance-none rounded-lg border border-[#343941] bg-[#191C22] pl-4 pr-10 text-sm font-medium text-[#F4F4F5] outline-none transition-colors hover:border-[#626A79] hover:bg-[#252A33] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="dueDateAsc">Due date: earliest</option>
+                <option value="dueDateDesc">Due date: latest</option>
+                <option value="nameAsc">Name A - Z</option>
+                <option value="nameDesc">Name Z - A</option>
+              </select>
+
+              <ChevronDown
+                size={16}
+                aria-hidden="true"
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#A1A1AA]"
+              />
+            </div>
           </div>
 
           {labels.length > 0 && (

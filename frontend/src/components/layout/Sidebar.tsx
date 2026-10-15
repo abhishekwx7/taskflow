@@ -105,9 +105,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Account and Logout */}
         <div className="mt-auto border-t border-[#343941] p-3">
+          {/* User Profile */}
           {user && (
-            <div className="mb-3 flex items-center gap-3 rounded-lg px-3 py-2">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#303642] text-xs font-semibold text-[#F4F4F5]">
+            <div className="mb-2 flex items-center gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3">
+              {/* Avatar */}
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-500/15 text-sm font-semibold text-indigo-300 ring-1 ring-indigo-400/20">
                 {user.name
                   .trim()
                   .split(/\s+/)
@@ -117,22 +119,31 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   .toUpperCase()}
               </div>
 
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-[#858B98]">
+              {/* User Details */}
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-[#F4F4F5]">
                   {user.name}
                 </p>
-                <p className="text-xs text-gray-500">My Workspace</p>
+
+                <p className="mt-0.5 text-xs text-[#858B98]">My Workspace</p>
               </div>
+
+              {/* Active Indicator */}
+              <span
+                title="Signed in"
+                className="h-2 w-2 shrink-0 rounded-full bg-emerald-400"
+              />
             </div>
           )}
 
+          {/* Logout Button */}
           <button
             type="button"
             onClick={logout}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-[#A1A1AA] transition-colors hover:bg-red-500/10 hover:text-red-400"
+            className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-[#A1A1AA] transition-all duration-200 hover:bg-red-500/10 hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/50"
           >
-            <LogOut className="h-4 w-4" />
-            Log out
+            <LogOut className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+            <span>Log out</span>
           </button>
         </div>
       </aside>

@@ -29,6 +29,31 @@ export default function Dashboard() {
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState("");
 
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  const completionPercentage =
+    totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const formattedTime = currentTime.toLocaleDateString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  const formattedDate = currentTime.toLocaleDateString("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedProjectSearch(projectSearch.trim());
@@ -150,14 +175,26 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#111318]">
       <header className="border-b border-[#343941] bg-[#191C22]">
-        <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
-          <h2 className="break-words text-2xl font-bold tracking-tight text-[#F4F4F5] sm:text-3xl">
-            {greeting}, {user?.name} 👋
-          </h2>
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-6 lg:px-8">
+          {/* Greeting */}
+          <div>
+            <h2 className="break-words text-2xl font-bold tracking-tight text-[#F4F4F5] sm:text-3xl">
+              {greeting}, {user?.name} 👋
+            </h2>
 
-          <p className="mt-1 text-sm text-[#A1A1AA]">
-            Manage your projects and stay organized.
-          </p>
+            <p className="mt-1 text-sm text-[#A1A1AA]">
+              Manage your projects and stay organized.
+            </p>
+          </div>
+
+          {/* Date and Time */}
+          <div className="text-left sm:text-right">
+            <p className="text-lg font-semibold text-[#F4F4F5]">
+              {formattedTime}
+            </p>
+
+            <p className="text-sm text-[#A1A1AA]">{formattedDate}</p>
+          </div>
         </div>
       </header>
 
@@ -184,9 +221,22 @@ export default function Dashboard() {
           <div className="rounded-xl border border-[#343941] bg-[#22262E] px-5 py-4 sm:col-span-2 lg:col-span-1">
             <p className="text-sm font-medium text-[#A1A1AA]">Completed</p>
 
-            <p className="mt-3 text-3xl font-bold tracking-tight text-[#F4F4F5]">
-              {completedTasks}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-2xl font-bold text-[#F4F4F5]">
+                {completedTasks}
+              </p>
+
+              <span className="text-sm font-medium text-green-400">
+                {completionPercentage}%
+              </span>
+            </div>
+
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#414650]">
+              <div
+                className="h-full rounded-full bg-green-500 transition-all duration-300"
+                style={{ width: `${completionPercentage}%` }}
+              />
+            </div>
           </div>
         </div>
 
@@ -259,7 +309,13 @@ export default function Dashboard() {
           {/* Projects */}
 
           {isLoading ? (
-            <p className="text-sm text-gray-500">Loading projects...</p>
+            <div className="flex items-center justify-center gap-3 py-10">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#343941] border-t-blue-500" />
+
+              <p className="text-sm font-medium text-[#A1A1AA]">
+                Loading projects...
+              </p>
+            </div>
           ) : projects.length === 0 ? (
             <div className="rounded-xl border border-dashed border-[#343941] bg-[#22262E] px-4 py-8 text-center sm:px-6 sm:py-10">
               <p className="font-medium text-[#F4F4F5]">No projects yet</p>

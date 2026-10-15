@@ -23,8 +23,15 @@ import {
 
 import { getContrastTextColor } from "../utils/color";
 
+import { getProject } from "../services/project.service";
+import type { Project } from "../types/projects";
+
 export default function ProjectPage() {
   const { projectId } = useParams();
+
+  const [project, setProject] = useState<Project | null>(null);
+  const [isLoadingProject, setIsProjectLoading] = useState(true);
+  const [projectError, setProjectError] = useState("");
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,6 +57,30 @@ export default function ProjectPage() {
       clearTimeout(timer);
     };
   }, [search]);
+
+  useEffect(() => {
+    if (!projectId) {
+      setIsProjectLoading(false);
+      return;
+    }
+
+    async function fetchProject() {
+      try {
+        setIsProjectLoading(true);
+        setProjectError("");
+
+        const data = await getProject(projectId!);
+        setProject(data);
+      } catch (error) {
+        setProject(null);
+        setProjectError("Failed to load project!");
+      } finally {
+        setIsProjectLoading(false);
+      }
+    }
+
+    fetchProject();
+  }, [projectId]);
 
   useEffect(() => {
     async function fetchTasks() {
@@ -399,9 +430,18 @@ export default function ProjectPage() {
     <div className="min-h-screen min-w-0 bg-[#111318]">
       <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
         <div className="mb-6">
-          <h1 className="mb-3 text-xl font-bold text-[#F4F4F5] sm:text-2xl">
-            Tasks
+          <h1 className="mb-3 break-words text-xl font-bold text-[#F4F4F5] sm:text-2xl">
+            {isLoadingProject
+              ? "Loading project..."
+              : (project?.name ?? "Project")}
           </h1>
+
+          {projectError && (
+            <p role="alert" className="mb-3 text-sm text-red-400">
+              {projectError}
+            </p>
+          )}
+
           <p className="mt-1 text-sm text-[#A1A1AA]">
             Manage tasks, due dates, and labels for this project.
           </p>

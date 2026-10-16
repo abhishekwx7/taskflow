@@ -13,8 +13,18 @@ import {
 } from "./middleware/rateLimit.middleware.js";
 
 const app = express();
+app.set("trust proxy", 1);
 
-app.use(cors());
+const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.FRONTEND_URL,
+].filter((origin): origin is string => Boolean(origin));
+
+app.use(
+    cors({
+        origin: allowedOrigins,
+    }),
+);
 app.use(helmet());
 
 app.use(express.json({ limit: "10kb" }));

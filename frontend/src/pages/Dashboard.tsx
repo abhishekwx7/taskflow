@@ -1,12 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  ArrowRight,
+  CheckCheck,
+  FolderKanban,
+  ListTodo,
+  Plus,
+  Search,
+} from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
-
 import { createProject, getProjects } from "../services/project.service";
 import { getAllTasks } from "../services/task.service";
-import type { Task } from "../types/task";
 
 import type { CreateProjectInput, Project } from "../types/projects";
 
@@ -21,7 +28,6 @@ export default function Dashboard() {
   const [projectSearch, setProjectSearch] = useState("");
   const [debouncedProjectSearch, setDebouncedProjectSearch] = useState("");
 
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [totalTasks, setTotalTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
 
@@ -34,6 +40,7 @@ export default function Dashboard() {
   const completionPercentage =
     totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
+  // Current date and time
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -42,7 +49,10 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const formattedTime = currentTime.toLocaleDateString("en-IN", {
+  const formattedTime = currentTime.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -54,20 +64,31 @@ export default function Dashboard() {
     year: "numeric",
   });
 
+  const currentHour = currentTime.getHours();
+
+  let greeting = "Good evening";
+
+  if (currentHour < 12) {
+    greeting = "Good morning";
+  } else if (currentHour < 18) {
+    greeting = "Good afternoon";
+  }
+
+  // Debounced project search
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedProjectSearch(projectSearch.trim());
     }, 1500);
 
-    return () => {
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, [projectSearch]);
 
+  // Fetch projects
   useEffect(() => {
     async function fetchProjects() {
       try {
         setError("");
+        setIsLoading(true);
 
         const data = await getProjects({
           search: debouncedProjectSearch,
@@ -93,15 +114,12 @@ export default function Dashboard() {
     fetchProjects();
   }, [debouncedProjectSearch]);
 
-  // Fetch all tasks once when Dashboard mounts
+  // Fetch task statistics
   useEffect(() => {
     async function fetchTasks() {
       try {
-        setError("");
-
         const data = await getAllTasks();
 
-        setTasks(data.tasks);
         setTotalTasks(data.pagination.total);
         setCompletedTasks(data.stats.completed);
       } catch (error) {
@@ -121,12 +139,11 @@ export default function Dashboard() {
     fetchTasks();
   }, []);
 
-  async function handleCreateProject(e: React.SubmitEvent<HTMLFormElement>) {
+  // Create project
+  async function handleCreateProject(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!projectName.trim()) {
-      return;
-    }
+    if (!projectName.trim()) return;
 
     setError("");
     setIsCreating(true);
@@ -142,18 +159,29 @@ export default function Dashboard() {
 
       const newProject = await createProject(data);
 
-      setProjects((prev) => [newProject, ...prev]);
+      setProjects((prev) => {
+        if (
+          debouncedProjectSearch &&
+          !newProject.name
+            .toLowerCase()
+            .includes(debouncedProjectSearch.toLowerCase())
+        ) {
+          return prev;
+        }
+
+        return [newProject, ...prev];
+      });
 
       setProjectName("");
       setProjectColor("");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const messsage =
+        const message =
           error.response?.data?.message ||
           error.response?.data?.error ||
           "Failed to create project";
 
-        setError(messsage);
+        setError(message);
       } else {
         setError("Something went wrong");
       }
@@ -162,198 +190,298 @@ export default function Dashboard() {
     }
   }
 
-  const currentHour = new Date().getHours();
-
-  let greeting = "Good evening";
-
-  if (currentHour < 12) {
-    greeting = "Good morning";
-  } else if (currentHour < 18) {
-    greeting = "Good afternoon";
-  }
-
   return (
-    <div className="min-h-screen bg-[#111318]">
-      <header className="border-b border-[#343941] bg-[#191C22]">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F1117] text-[#F4F5F8] antialiased">
+      {/* Dashboard Header */}
+      <header className="border-b border-[#252936] bg-[#12151D]">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-5 py-7 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-8">
           {/* Greeting */}
           <div>
-            <h2 className="break-words text-2xl font-bold tracking-tight text-[#F4F4F5] sm:text-3xl">
-              {greeting}, {user?.name} 👋
-            </h2>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#30394C] bg-[#192235] px-3 py-1 text-xs font-medium text-[#9BBEFF]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#74A5FF]" />
+              Your workspace
+            </div>
 
-            <p className="mt-1 text-sm text-[#A1A1AA]">
+            <h1 className="break-words text-2xl font-bold tracking-tight text-[#F4F5F8] sm:text-3xl">
+              {greeting}, <span className="text-[#A7BFFF]">{user?.name}</span>{" "}
+              👋
+            </h1>
+
+            <p className="mt-2 text-sm leading-6 text-[#9CA3B5]">
               Manage your projects and stay organized.
             </p>
           </div>
 
           {/* Date and Time */}
-          <div className="text-left sm:text-right">
-            <p className="text-lg font-semibold text-[#F4F4F5]">
+          <div className="shrink-0 text-left sm:text-right">
+            <p className="text-sm font-semibold text-[#F4F5F8] sm:text-base">
               {formattedTime}
             </p>
 
-            <p className="text-sm text-[#A1A1AA]">{formattedDate}</p>
+            <p className="mt-1 text-xs text-[#858DA0] sm:text-sm">
+              {formattedDate}
+            </p>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 lg:px-8">
-        {/* Dashboard Stats */}
+      <main className="mx-auto w-full max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
+        {/* Statistics */}
+        <section className="mb-10">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Projects Stat */}
+            <div className="rounded-2xl border border-[#2B3040] bg-[#1A1E29] p-5 transition-colors hover:border-[#47516A] sm:p-6">
+              <div className="mb-5 flex items-center justify-between">
+                <p className="text-sm font-medium text-[#9CA3B5]">Projects</p>
 
-        <div className="mb-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-xl border border-[#343941] bg-[#22262E] px-5 py-4">
-            <p className="text-sm font-medium text-[#A1A1AA]">Projects</p>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#29354D]">
+                  <FolderKanban size={19} className="text-[#9BBEFF]" />
+                </div>
+              </div>
 
-            <p className="mt-2 text-3xl font-bold tracking-tight text-[#F4F4F5]">
-              {projects.length}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-[#343941] bg-[#22262E] px-5 py-4">
-            <p className="text-sm font-medium text-[#A1A1AA]">Total Tasks</p>
-
-            <p className="mt-3 text-3xl font-bold tracking-tight text-[#F4F4F5]">
-              {totalTasks}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-[#343941] bg-[#22262E] px-5 py-4 sm:col-span-2 lg:col-span-1">
-            <p className="text-sm font-medium text-[#A1A1AA]">Completed</p>
-
-            <div className="flex items-center justify-between">
-              <p className="text-2xl font-bold text-[#F4F4F5]">
-                {completedTasks}
+              <p className="text-3xl font-bold tracking-tight text-[#F4F5F8]">
+                {projects.length}
               </p>
 
-              <span className="text-sm font-medium text-green-400">
-                {completionPercentage}%
-              </span>
+              <p className="mt-2 text-xs text-[#858DA0]">
+                {debouncedProjectSearch
+                  ? "Matching projects"
+                  : "Projects in your workspace"}
+              </p>
             </div>
 
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#414650]">
+            {/* Total Tasks Stat */}
+            <div className="rounded-2xl border border-[#2B3040] bg-[#1A1E29] p-5 transition-colors hover:border-[#47516A] sm:p-6">
+              <div className="mb-5 flex items-center justify-between">
+                <p className="text-sm font-medium text-[#9CA3B5]">
+                  Total Tasks
+                </p>
+
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#29354D]">
+                  <ListTodo size={19} className="text-[#9BBEFF]" />
+                </div>
+              </div>
+
+              <p className="text-3xl font-bold tracking-tight text-[#F4F5F8]">
+                {totalTasks}
+              </p>
+
+              <p className="mt-2 text-xs text-[#858DA0]">
+                Tasks across all projects
+              </p>
+            </div>
+
+            {/* Completed Stat */}
+            <div className="rounded-2xl border border-[#2B3040] bg-[#1A1E29] p-5 transition-colors hover:border-[#47516A] sm:col-span-2 sm:p-6 lg:col-span-1">
+              <div className="mb-5 flex items-center justify-between">
+                <p className="text-sm font-medium text-[#9CA3B5]">Completed</p>
+
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#29354D]">
+                  <CheckCheck size={19} className="text-[#9BBEFF]" />
+                </div>
+              </div>
+
+              <div className="flex items-end justify-between gap-3">
+                <p className="text-3xl font-bold tracking-tight text-[#F4F5F8]">
+                  {completedTasks}
+                </p>
+
+                <span className="text-sm font-semibold text-[#A7BFFF]">
+                  {completionPercentage}%
+                </span>
+              </div>
+
               <div
-                className="h-full rounded-full bg-green-500 transition-all duration-300"
-                style={{ width: `${completionPercentage}%` }}
+                className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#303543]"
+                role="progressbar"
+                aria-label="Task completion"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={completionPercentage}
+              >
+                <div
+                  className="h-full rounded-full bg-[#729EFF] transition-all duration-300"
+                  style={{
+                    width: `${completionPercentage}%`,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Projects */}
+        <section>
+          {/* Section Heading */}
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#8EACFA]">
+                Your workspace
+              </p>
+
+              <h2 className="text-2xl font-bold tracking-tight text-[#F4F5F8]">
+                Projects
+              </h2>
+
+              <p className="mt-2 text-sm text-[#9CA3B5]">
+                Keep your work organized, one project at a time.
+              </p>
+            </div>
+          </div>
+
+          {/* Search and Create */}
+          <div className="mb-6 space-y-4">
+            {/* Search */}
+            <div className="relative">
+              <Search
+                size={18}
+                aria-hidden="true"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#858DA0]"
+              />
+
+              <input
+                type="search"
+                value={projectSearch}
+                onChange={(e) => setProjectSearch(e.target.value)}
+                placeholder="Search projects..."
+                aria-label="Search projects"
+                className="h-12 w-full rounded-xl border border-[#303543] bg-[#1A1E29] py-3 pl-11 pr-4 text-base text-[#F4F5F8] outline-none transition-colors placeholder:text-[#858DA0] focus:border-[#729EFF] focus:ring-2 focus:ring-blue-500/15 sm:text-sm"
               />
             </div>
-          </div>
-        </div>
 
-        {/* PROJECTS */}
-
-        <section>
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-xl font-semibold text-[#F4F4F5]">Projects</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Your current projects
-              </p>
-            </div>
-          </div>
-
-          <div className="mb-5 space-y-3">
-            {" "}
-            {/* Search */}
-            <input
-              type="text"
-              value={projectSearch}
-              onChange={(e) => {
-                setProjectSearch(e.target.value);
-              }}
-              placeholder="Search projects..."
-              className="h-11 w-full sm:h-10 rounded-lg border border-[#343941] bg-[#22262E] px-4 text-base sm:text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
-            />
-            {/* Create Project */}
+            {/* Create Project Form */}
             <form
               onSubmit={handleCreateProject}
-              className="grid grid-cols-[auto_minmax(0,1fr)] gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3 lg:flex lg:items-center"
+              className="flex flex-col gap-3 rounded-2xl border border-[#2B3040] bg-[#1A1E29] p-4 sm:flex-row sm:items-center"
             >
               <input
                 type="text"
                 value={projectName}
-                onChange={(e) => {
-                  setProjectName(e.target.value);
-                }}
-                placeholder="Project name"
-                className="col-span-2 h-10 min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 lg:col-auto"
+                onChange={(e) => setProjectName(e.target.value)}
+                placeholder="Enter project name..."
+                aria-label="Project name"
+                className="h-11 min-w-0 flex-1 rounded-lg border border-[#303543] bg-[#141821] px-4 text-base text-[#F4F5F8] outline-none transition-colors placeholder:text-[#858DA0] focus:border-[#729EFF] focus:ring-2 focus:ring-blue-500/15 sm:text-sm"
               />
 
-              <input
-                type="color"
-                value={projectColor}
-                onChange={(e) => {
-                  setProjectColor(e.target.value);
-                }}
-                className="h-11 sm:h-10 w-14 shrink-0 cursor-pointer rounded-lg border border-[#343941] bg-[#191C22] p-1"
-              />
+              <div className="flex items-center gap-3">
+                {/* Project Color */}
+                <label
+                  className="flex h-11 w-14 shrink-0 items-center justify-center rounded-lg border border-[#303543] bg-[#141821] p-1"
+                  title="Choose project color"
+                >
+                  <span className="sr-only">Project color</span>
 
-              <button
-                type="submit"
-                disabled={isCreating || !projectName.trim()}
-                className="h-11 w-full shrink-0 sm:h-10 rounded-lg bg-[#F4F4F5] px-4 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50 lg:w-auto"
-              >
-                {isCreating ? "Creating..." : "Create Project"}
-              </button>
+                  <input
+                    type="color"
+                    value={projectColor || "#729EFF"}
+                    onChange={(e) => setProjectColor(e.target.value)}
+                    aria-label="Project color"
+                    className="h-full w-full cursor-pointer rounded-md border-0 bg-transparent"
+                  />
+                </label>
+
+                {/* Create Button */}
+                <button
+                  type="submit"
+                  disabled={isCreating || !projectName.trim()}
+                  className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#F4F5F8] px-5 text-sm font-semibold text-[#0F1117] transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
+                >
+                  {isCreating ? (
+                    "Creating..."
+                  ) : (
+                    <>
+                      <Plus size={17} />
+                      Create Project
+                    </>
+                  )}
+                </button>
+              </div>
             </form>
           </div>
 
           {/* Error */}
-
           {error && (
-            <p className="mb-5 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
+            <div
+              role="alert"
+              className="mb-5 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400"
+            >
               {error}
-            </p>
+            </div>
           )}
 
-          {/* Projects */}
-
+          {/* Project List */}
           {isLoading ? (
-            <div className="flex items-center justify-center gap-3 py-10">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#343941] border-t-blue-500" />
+            <div className="flex items-center justify-center gap-3 py-12">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#303543] border-t-[#729EFF]" />
 
-              <p className="text-sm font-medium text-[#A1A1AA]">
+              <p className="text-sm font-medium text-[#9CA3B5]">
                 Loading projects...
               </p>
             </div>
           ) : projects.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-[#343941] bg-[#22262E] px-4 py-8 text-center sm:px-6 sm:py-10">
-              <p className="font-medium text-[#F4F4F5]">No projects yet</p>
+            <div className="rounded-2xl border border-dashed border-[#303543] bg-[#1A1E29] px-5 py-12 text-center">
+              <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#29354D]">
+                <FolderKanban size={23} className="text-[#9BBEFF]" />
+              </div>
 
-              <p className="mt-1 text-sm text-[#A1A1AA]">
-                Create your first project above.
+              <h3 className="text-lg font-semibold text-[#F4F5F8]">
+                {debouncedProjectSearch
+                  ? "No matching projects"
+                  : "No projects yet"}
+              </h3>
+
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#9CA3B5]">
+                {debouncedProjectSearch
+                  ? "Try searching with a different project name."
+                  : "Create your first project above and start organizing your tasks."}
               </p>
             </div>
           ) : (
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {projects.map((project) => (
-                <div
+                <button
                   key={project.id}
+                  type="button"
                   onClick={() => navigate(`/projects/${project.id}`)}
-                  className="cursor-pointer rounded-xl border border-[#343941] bg-[#22262E] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#525866] hover:bg-[#292E38]"
+                  className="group w-full rounded-2xl border border-[#2B3040] bg-[#1A1E29] p-5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-[#47516A] hover:bg-[#202530] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
                 >
-                  <div className="mb-3 flex items-center gap-3">
-                    <div
-                      className="h-3 w-3 shrink-0 rounded-full"
-                      style={{
-                        backgroundColor: project.color || "#6b7280",
-                      }}
-                    />
+                  <div className="mb-4 flex items-center justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      {/* Project Color */}
+                      <span
+                        className="h-3 w-3 shrink-0 rounded-full"
+                        style={{
+                          backgroundColor: project.color || "#729EFF",
+                        }}
+                      />
 
-                    <h4 className="min-w-0 truncate text-sm font-semibold text-[#F4F4F5]">
-                      {project.name}
-                    </h4>
+                      <h3 className="truncate text-sm font-semibold text-[#F4F5F8]">
+                        {project.name}
+                      </h3>
+                    </div>
+
+                    <ArrowRight
+                      size={17}
+                      aria-hidden="true"
+                      className="shrink-0 text-[#858DA0] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#A7BFFF]"
+                    />
                   </div>
 
-                  <p className="text-xs text-[#A1A1AA]">
-                    Created {new Date(project.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
+                  <div className="flex items-center justify-between gap-2 border-t border-[#303543] pt-3">
+                    <p className="text-xs text-[#858DA0]">
+                      Created {new Date(project.createdAt).toLocaleDateString()}
+                    </p>
+
+                    <span className="text-xs font-medium text-[#9BBEFF]">
+                      View project
+                    </span>
+                  </div>
+                </button>
               ))}
             </div>
           )}
         </section>
-      </div>
+      </main>
     </div>
   );
 }

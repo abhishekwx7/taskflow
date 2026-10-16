@@ -1,5 +1,7 @@
 import { useParams } from "react-router-dom";
+
 import axios from "axios";
+
 import { useState, useEffect } from "react";
 
 import {
@@ -12,6 +14,7 @@ import {
 } from "../services/task.service";
 
 import type { Task } from "../types/task";
+
 import type { Label } from "../types/label";
 
 import {
@@ -24,28 +27,36 @@ import {
 import { getContrastTextColor } from "../utils/color";
 
 import { getProject } from "../services/project.service";
+
 import type { Project } from "../types/projects";
 
 export default function ProjectPage() {
   const { projectId } = useParams();
 
   const [project, setProject] = useState<Project | null>(null);
+
   const [isLoadingProject, setIsProjectLoading] = useState(true);
+
   const [projectError, setProjectError] = useState("");
 
   const [tasks, setTasks] = useState<Task[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
+
   const [error, setError] = useState("");
 
   const [search, setSearch] = useState("");
+
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const [selectedLabelIds, setSelectedLabelsIds] = useState<string[]>([]);
+
   const [isLabelFilterOpen, setIsLabelFilterOpen] = useState(false);
 
   const [status, setStatus] = useState<"all" | "pending" | "completed">("all");
 
   const [sort, setSort] = useState<TaskSort>("newest");
+
   const [isSortOpen, setIsSortOpen] = useState(false);
 
   useEffect(() => {
@@ -61,18 +72,22 @@ export default function ProjectPage() {
   useEffect(() => {
     if (!projectId) {
       setIsProjectLoading(false);
+
       return;
     }
 
     async function fetchProject() {
       try {
         setIsProjectLoading(true);
+
         setProjectError("");
 
         const data = await getProject(projectId!);
+
         setProject(data);
       } catch (error) {
         setProject(null);
+
         setProjectError("Failed to load project!");
       } finally {
         setIsProjectLoading(false);
@@ -88,6 +103,7 @@ export default function ProjectPage() {
 
       try {
         setError("");
+
         setIsLoading(true);
 
         const hasLabelFilter = selectedLabelIds.length > 0;
@@ -99,8 +115,10 @@ export default function ProjectPage() {
               }
             : {
                 search: debouncedSearch || undefined,
+
                 status,
               }),
+
           sort,
         });
 
@@ -126,7 +144,9 @@ export default function ProjectPage() {
 
   function handleToggleFilterLabel(labelId: string) {
     setSearch("");
+
     setDebouncedSearch("");
+
     setStatus("all");
 
     setSelectedLabelsIds((prev) => {
@@ -139,7 +159,9 @@ export default function ProjectPage() {
   }
 
   const [taskName, setTaskName] = useState("");
+
   const [dueDate, setDueDate] = useState("");
+
   const [isCreating, setIsCreating] = useState(false);
 
   async function handleCreateTask(e: React.SubmitEvent<HTMLFormElement>) {
@@ -151,6 +173,7 @@ export default function ProjectPage() {
 
     try {
       setError("");
+
       setIsCreating(true);
 
       const data: CreateTaskInput = {
@@ -166,6 +189,7 @@ export default function ProjectPage() {
       setTasks((prev) => [newTask, ...prev]);
 
       setTaskName("");
+
       setDueDate("");
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -213,6 +237,7 @@ export default function ProjectPage() {
   );
 
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
+
   const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDeleteTask() {
@@ -222,6 +247,7 @@ export default function ProjectPage() {
 
     try {
       setError("");
+
       setIsDeleting(true);
 
       await deleteTask(taskToDelete.id);
@@ -246,12 +272,16 @@ export default function ProjectPage() {
   }
 
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+
   const [editTaskName, setEditTaskName] = useState("");
+
   const [editDueDate, setEditDueDate] = useState("");
+
   const [isUpdating, setIsUpdating] = useState(false);
 
   function openEditDialog(task: Task) {
     setTaskToEdit(task);
+
     setEditTaskName(task.name);
 
     if (task.dueDate) {
@@ -270,10 +300,12 @@ export default function ProjectPage() {
 
     try {
       setError("");
+
       setIsUpdating(true);
 
       const updatedTask = await updateTask(taskToEdit.id, {
         name: editTaskName.trim(),
+
         ...(editDueDate && {
           dueDate: new Date(editDueDate).toISOString(),
         }),
@@ -284,7 +316,9 @@ export default function ProjectPage() {
       );
 
       setTaskToEdit(null);
+
       setEditTaskName("");
+
       setEditDueDate("");
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -307,7 +341,8 @@ export default function ProjectPage() {
   const [labelTask, setLabelTask] = useState<Task | null>(null);
 
   const [newLabelName, setNewLabelName] = useState("");
-  const [newLabelColor, setNewLabelColor] = useState("#3b82f6");
+
+  const [newLabelColor, setNewLabelColor] = useState("#729EFF");
 
   const [isCreatingLabel, setIsCreatingLabel] = useState(false);
 
@@ -393,17 +428,20 @@ export default function ProjectPage() {
 
     try {
       setError("");
+
       setIsCreatingLabel(true);
 
       const newLabel = await createLabel({
         name: newLabelName.trim(),
+
         color: newLabelColor,
       });
 
       setLabels((prev) => [newLabel, ...prev]);
 
       setNewLabelName("");
-      setNewLabelColor("#3b82f6");
+
+      setNewLabelColor("#729EFF");
 
       if (labelTask) {
         await handleAttachLabel(newLabel);
@@ -423,14 +461,14 @@ export default function ProjectPage() {
   }
 
   {
-    /* JSX PART */
+    / JSX PART /;
   }
 
   return (
-    <div className="min-h-screen min-w-0 bg-[#111318]">
+    <div className="min-h-screen min-w-0 bg-[#0F1117]">
       <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
         <div className="mb-6">
-          <h1 className="mb-3 break-words text-xl font-bold text-[#F4F4F5] sm:text-2xl">
+          <h1 className="mb-3 break-words text-xl font-bold text-[#F4F5F8] sm:text-2xl">
             {isLoadingProject
               ? "Loading project..."
               : (project?.name ?? "Project")}
@@ -442,7 +480,7 @@ export default function ProjectPage() {
             </p>
           )}
 
-          <p className="mt-1 text-sm text-[#A1A1AA]">
+          <p className="mt-1 text-sm text-[#9CA3B5]">
             Manage tasks, due dates, and labels for this project.
           </p>
         </div>
@@ -453,37 +491,39 @@ export default function ProjectPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search tasks..."
-            className="h-10 w-full rounded-lg border border-[#343941] bg-[#22262E] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
+            className="h-10 w-full rounded-lg border border-[#2B3040] bg-[#1A1E29] px-4 text-sm text-[#F4F5F8] placeholder:text-[#858DA0] outline-none transition-colors focus:border-[#729EFF] focus:ring-2 focus:ring-blue-500/15"
           />
         </div>
+
         {error && (
           <p className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
             {error}
           </p>
         )}
+
         <form
           onSubmit={handleCreateTask}
-          className="mb-6 grid grid-cols-[minmax(0,1fr)_auto] gap-3 rounded-xl border border-[#343941] bg-[#22262E] p-3 sm:flex sm:items-center"
+          className="mb-6 grid grid-cols-[minmax(0,1fr)_auto] gap-3 rounded-xl border border-[#2B3040] bg-[#1A1E29] p-3 sm:flex sm:items-center"
         >
           <input
             type="text"
             value={taskName}
             onChange={(e) => setTaskName(e.target.value)}
             placeholder="Task Name"
-            className="col-span-2 h-10 min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-4 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 sm:col-auto"
+            className="col-span-2 h-10 min-w-0 flex-1 rounded-lg border border-[#2B3040] bg-[#141821] px-4 text-sm text-[#F4F5F8] placeholder:text-[#858DA0] outline-none transition-colors focus:border-[#729EFF] focus:ring-2 focus:ring-blue-500/15 sm:col-auto"
           />
 
           <input
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="scheme-dark h-10 w-full min-w-0 rounded-lg border border-[#343941] bg-[#191C22] px-3 text-sm text-[#F4F4F5] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20 sm:w-44"
+            className="scheme-dark h-10 w-full min-w-0 rounded-lg border border-[#2B3040] bg-[#141821] px-3 text-sm text-[#F4F5F8] outline-none transition-colors focus:border-[#729EFF] focus:ring-2 focus:ring-blue-500/15 sm:w-44"
           />
 
           <button
             type="submit"
             disabled={isCreating || !taskName.trim()}
-            className="h-10 shrink-0 rounded-lg bg-[#F4F4F5] px-4 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-10 shrink-0 rounded-lg bg-[#F4F5F8] px-4 text-sm font-semibold text-[#0F1117] transition-colors hover:bg-[#FFFFFF] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isCreating ? "Creating..." : "Add Task"}
           </button>
@@ -495,40 +535,45 @@ export default function ProjectPage() {
               type="button"
               onClick={() => {
                 setSelectedLabelsIds([]);
+
                 setStatus("all");
               }}
               className={`h-10 rounded-lg border px-4 text-sm font-medium transition-colors ${
                 status === "all" && selectedLabelIds.length === 0
-                  ? "border-[#626A79] bg-[#303642] text-[#F4F4F5]"
-                  : "border-[#343941] bg-[#22262E] text-[#A1A1AA] hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  ? "border-[#354665] bg-[#29354D] text-[#A7BFFF]"
+                  : "border-[#2B3040] bg-[#1A1E29] text-[#9CA3B5] hover:bg-[#202530] hover:text-[#F4F5F8]"
               }`}
             >
               All
             </button>
+
             <button
               type="button"
               onClick={() => {
                 setSelectedLabelsIds([]);
+
                 setStatus("pending");
               }}
               className={`h-10 rounded-lg border px-4 text-sm font-medium transition-colors ${
                 status === "pending" && selectedLabelIds.length === 0
-                  ? "border-[#626A79] bg-[#303642] text-[#F4F4F5]"
-                  : "border-[#343941] bg-[#22262E] text-[#A1A1AA] hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  ? "border-[#354665] bg-[#29354D] text-[#A7BFFF]"
+                  : "border-[#2B3040] bg-[#1A1E29] text-[#9CA3B5] hover:bg-[#202530] hover:text-[#F4F5F8]"
               }`}
             >
               Pending
             </button>
+
             <button
               type="button"
               onClick={() => {
                 setSelectedLabelsIds([]);
+
                 setStatus("completed");
               }}
               className={`h-10 rounded-lg border px-4 text-sm font-medium transition-colors ${
                 status === "completed" && selectedLabelIds.length === 0
-                  ? "border-[#626A79] bg-[#303642] text-[#F4F4F5]"
-                  : "border-[#343941] bg-[#22262E] text-[#A1A1AA] hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  ? "border-[#354665] bg-[#29354D] text-[#A7BFFF]"
+                  : "border-[#2B3040] bg-[#1A1E29] text-[#9CA3B5] hover:bg-[#202530] hover:text-[#F4F5F8]"
               }`}
             >
               Completed
@@ -539,8 +584,8 @@ export default function ProjectPage() {
               onClick={() => setIsLabelFilterOpen((prev) => !prev)}
               className={`h-10 rounded-lg border px-4 text-sm font-medium transition-colors ${
                 selectedLabelIds.length > 0
-                  ? "border-[#626A79] bg-[#303642] text-[#F4F4F5]"
-                  : "border-[#343941] bg-[#22262E] text-[#A1A1AA] hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  ? "border-[#354665] bg-[#29354D] text-[#A7BFFF]"
+                  : "border-[#2B3040] bg-[#1A1E29] text-[#9CA3B5] hover:bg-[#202530] hover:text-[#F4F5F8]"
               }`}
             >
               Filter by labels
@@ -551,21 +596,22 @@ export default function ProjectPage() {
           <div className="relative inline-block">
             <button
               type="button"
-              className="rounded-md border border-[#343941] bg-[#22262E] px-3 py-2 text-sm text-white"
+              className="rounded-md border border-[#2B3040] bg-[#1A1E29] px-3 py-2 text-sm text-[#F4F5F8]"
               onClick={() => setIsSortOpen((prev) => !prev)}
             >
               Sort
             </button>
 
             {isSortOpen && (
-              <div className="absolute left-0 z-20 mt-1 w-36 overflow-hidden rounded-md border border-[#343941] bg-[#22262E] py-0.5 shadow-xl">
+              <div className="absolute left-0 z-20 mt-1 w-36 overflow-hidden rounded-md border border-[#2B3040] bg-[#1A1E29] py-0.5 shadow-xl">
                 <button
                   type="button"
                   onClick={() => {
                     setSort("newest");
+
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#9CA3B5] transition-colors hover:bg-[#202530] hover:text-[#F4F5F8]"
                 >
                   Newest
                 </button>
@@ -574,9 +620,10 @@ export default function ProjectPage() {
                   type="button"
                   onClick={() => {
                     setSort("oldest");
+
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#9CA3B5] transition-colors hover:bg-[#202530] hover:text-[#F4F5F8]"
                 >
                   Oldest
                 </button>
@@ -585,9 +632,10 @@ export default function ProjectPage() {
                   type="button"
                   onClick={() => {
                     setSort("dueDateAsc");
+
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#9CA3B5] transition-colors hover:bg-[#202530] hover:text-[#F4F5F8]"
                 >
                   Due date: earliest
                 </button>
@@ -596,9 +644,10 @@ export default function ProjectPage() {
                   type="button"
                   onClick={() => {
                     setSort("dueDateDesc");
+
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#9CA3B5] transition-colors hover:bg-[#202530] hover:text-[#F4F5F8]"
                 >
                   Due date: latest
                 </button>
@@ -607,9 +656,10 @@ export default function ProjectPage() {
                   type="button"
                   onClick={() => {
                     setSort("nameAsc");
+
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#9CA3B5] transition-colors hover:bg-[#202530] hover:text-[#F4F5F8]"
                 >
                   Name A-Z
                 </button>
@@ -618,9 +668,10 @@ export default function ProjectPage() {
                   type="button"
                   onClick={() => {
                     setSort("nameDesc");
+
                     setIsSortOpen(false);
                   }}
-                  className="block w-full px-3 py-1.5 text-left text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                  className="block w-full px-3 py-1.5 text-left text-xs text-[#9CA3B5] transition-colors hover:bg-[#202530] hover:text-[#F4F5F8]"
                 >
                   Name Z-A
                 </button>
@@ -631,14 +682,14 @@ export default function ProjectPage() {
 
         {isLabelFilterOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-            <div className="w-full max-w-md rounded-xl border border-[#343941] bg-[#22262E] p-6 shadow-2xl">
-              <h2 className="text-lg font-semibold text-[#F4F4F5]">
+            <div className="w-full max-w-md rounded-xl border border-[#2B3040] bg-[#1A1E29] p-6 shadow-2xl">
+              <h2 className="text-lg font-semibold text-[#F4F5F8]">
                 Filter by labels
               </h2>
 
               <div className="mt-4">
                 {labels.length === 0 ? (
-                  <p className="text-sm text-[#A1A1AA]">No labels available.</p>
+                  <p className="text-sm text-[#9CA3B5]">No labels available.</p>
                 ) : (
                   <div className="flex flex-wrap gap-2">
                     {labels.map((label) => {
@@ -651,17 +702,19 @@ export default function ProjectPage() {
                           onClick={() => handleToggleFilterLabel(label.id)}
                           className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                             selected
-                              ? "ring-2 ring-[#F4F4F5] ring-offset-2 ring-offset-[#22262E]"
+                              ? "ring-2 ring-[#F4F5F8] ring-offset-2 ring-offset-[#141821]"
                               : ""
                           }`}
                           style={{
                             backgroundColor: label.color || "#6b7280",
+
                             color: getContrastTextColor(
                               label.color ?? "#6b7280",
                             ),
                           }}
                         >
                           {label.name}
+
                           {selected ? " ✓" : ""}
                         </button>
                       );
@@ -674,7 +727,7 @@ export default function ProjectPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedLabelsIds([])}
-                  className="rounded-lg border border-[#343941] bg-[#191C22] px-4 py-2 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642]"
+                  className="rounded-lg border border-[#2B3040] bg-[#141821] px-4 py-2 text-sm font-medium text-[#F4F5F8] transition-colors hover:bg-[#202530]"
                 >
                   Clear
                 </button>
@@ -682,7 +735,7 @@ export default function ProjectPage() {
                 <button
                   type="button"
                   onClick={() => setIsLabelFilterOpen(false)}
-                  className="rounded-lg bg-[#F4F4F5] px-4 py-2 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-lg bg-[#F4F5F8] px-4 py-2 text-sm font-semibold text-[#0F1117] transition-colors hover:bg-[#FFFFFF] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Done
                 </button>
@@ -691,12 +744,10 @@ export default function ProjectPage() {
           </div>
         )}
 
-        {/* LAOD TASKS */}
-
         {isLoading ? (
           <p>Loading tasks...</p>
         ) : tasks.length === 0 ? (
-          <p className="text-gray-500">
+          <p className="text-[#858DA0]">
             {debouncedSearch
               ? `No tasks found for "${debouncedSearch}".`
               : `No tasks yet. Create your first task.`}
@@ -709,7 +760,7 @@ export default function ProjectPage() {
                 className={`rounded-xl border p-4 transition-colors duration-200 ${
                   task.isCompleted
                     ? "border-emerald-500/25 bg-emerald-500/5"
-                    : "border-[#343941] bg-[#22262E] hover:border-[#525866]"
+                    : "border-[#2B3040] bg-[#1A1E29] hover:border-[#47516A] hover:bg-[#202530]"
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -718,22 +769,22 @@ export default function ProjectPage() {
                       type="checkbox"
                       checked={task.isCompleted}
                       onChange={() => handleToggleTask(task)}
-                      className="mt-1 h-4 w-4 shrink-0 cursor-pointer appearance-none rounded border border-[#626A79] bg-[#191C22] transition-colors checked:border-emerald-500 checked:bg-emerald-500 checked:after:block checked:after:text-center checked:after:text-[11px] checked:after:font-bold checked:after:leading-[14px] checked:after:text-[#111318] checked:after:content-['✓'] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
+                      className="mt-1 h-4 w-4 shrink-0 cursor-pointer appearance-none rounded border border-[#729EFF] bg-[#141821] transition-colors checked:border-emerald-500 checked:bg-emerald-500 checked:after:block checked:after:text-center checked:after:text-[11px] checked:after:font-bold checked:after:leading-[14px] checked:after:text-[#0F1117] checked:after:content-['✓'] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
                     />
 
                     <div>
                       <h2
                         className={`font-semibold ${
                           task.isCompleted
-                            ? "text-[#858B98] line-through"
-                            : "text-[#F4F4F5]"
+                            ? "text-[#858DA0] line-through"
+                            : "text-[#F4F5F8]"
                         }`}
                       >
                         {task.name}
                       </h2>
 
                       {task.dueDate && (
-                        <p className="text-sm text-[#A1A1AA]">
+                        <p className="text-sm text-[#9CA3B5]">
                           Due: {new Date(task.dueDate).toLocaleDateString()}
                         </p>
                       )}
@@ -747,10 +798,12 @@ export default function ProjectPage() {
                         className="flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium"
                         style={{
                           backgroundColor: label.color || "#6b7280",
+
                           color: getContrastTextColor(label.color ?? "#6b7280"),
                         }}
                       >
                         {label.name}
+
                         <button
                           type="button"
                           onClick={() => handleRemoveLabel(task.id, label.id)}
@@ -765,7 +818,7 @@ export default function ProjectPage() {
                     <button
                       type="button"
                       onClick={() => setLabelTask(task)}
-                      className="rounded-lg border border-[#343941] bg-[#191C22] px-2 py-1 text-xs text-[#A1A1AA] transition-colors hover:bg-[#303642] hover:text-[#F4F4F5]"
+                      className="rounded-lg border border-[#2B3040] bg-[#141821] px-2 py-1 text-xs text-[#9CA3B5] transition-colors hover:bg-[#202530] hover:text-[#F4F5F8]"
                     >
                       + Add label
                     </button>
@@ -774,7 +827,7 @@ export default function ProjectPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => openEditDialog(task)}
-                      className="h-9 rounded-lg border border-[#343941] bg-[#191C22] px-3 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642]"
+                      className="h-9 rounded-lg border border-[#2B3040] bg-[#141821] px-3 text-sm font-medium text-[#F4F5F8] transition-colors hover:bg-[#202530]"
                     >
                       Edit
                     </button>
@@ -791,14 +844,15 @@ export default function ProjectPage() {
             ))}
           </div>
         )}
+
         {taskToDelete && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-            <div className="w-full max-w-sm rounded-xl border border-[#343941] bg-[#22262E] p-6 shadow-2xl">
-              <h2 className="text-lg font-semibold text-[#F4F4F5]">
+            <div className="w-full max-w-sm rounded-xl border border-[#2B3040] bg-[#1A1E29] p-6 shadow-2xl">
+              <h2 className="text-lg font-semibold text-[#F4F5F8]">
                 Delete task?
               </h2>
 
-              <p className="mt-2 text-sm text-[#A1A1AA]">
+              <p className="mt-2 text-sm text-[#9CA3B5]">
                 Are you sure you want to delete "{taskToDelete.name}"?
               </p>
 
@@ -806,7 +860,7 @@ export default function ProjectPage() {
                 <button
                   onClick={() => setTaskToDelete(null)}
                   disabled={isDeleting}
-                  className="rounded-lg border border-[#343941] bg-[#191C22] px-4 py-2 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642]"
+                  className="rounded-lg border border-[#2B3040] bg-[#141821] px-4 py-2 text-sm font-medium text-[#F4F5F8] transition-colors hover:bg-[#202530]"
                 >
                   Cancel
                 </button>
@@ -814,7 +868,7 @@ export default function ProjectPage() {
                 <button
                   onClick={handleDeleteTask}
                   disabled={isDeleting}
-                  className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-[#F4F5F8] transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isDeleting ? "Deleting..." : "Delete"}
                 </button>
@@ -822,18 +876,19 @@ export default function ProjectPage() {
             </div>
           </div>
         )}
+
         {taskToEdit && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
             <form
               onSubmit={handleEditTask}
-              className="w-full max-w-sm rounded-xl border border-[#343941] bg-[#22262E] p-6 shadow-2xl"
+              className="w-full max-w-sm rounded-xl border border-[#2B3040] bg-[#1A1E29] p-6 shadow-2xl"
             >
-              <h2 className="text-lg font-semibold text-[#F4F4F5]">
+              <h2 className="text-lg font-semibold text-[#F4F5F8]">
                 Edit Task
               </h2>
 
               <div className="mt-4">
-                <label className="mb-1 block text-sm font-medium text-[#F4F4F5]">
+                <label className="mb-1 block text-sm font-medium text-[#F4F5F8]">
                   Task name
                 </label>
 
@@ -841,12 +896,12 @@ export default function ProjectPage() {
                   type="text"
                   value={editTaskName}
                   onChange={(e) => setEditTaskName(e.target.value)}
-                  className="w-full rounded-lg border border-[#343941] bg-[#191C22] px-3 py-2 text-sm text-[#F4F4F5] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
+                  className="w-full rounded-lg border border-[#2B3040] bg-[#141821] px-3 py-2 text-sm text-[#F4F5F8] outline-none transition-colors focus:border-[#729EFF] focus:ring-2 focus:ring-blue-500/15"
                 />
               </div>
 
               <div className="mt-4">
-                <label className="mb-1 block text-sm font-medium text-[#F4F4F5]">
+                <label className="mb-1 block text-sm font-medium text-[#F4F5F8]">
                   Due Date
                 </label>
 
@@ -854,7 +909,7 @@ export default function ProjectPage() {
                   type="date"
                   value={editDueDate}
                   onChange={(e) => setEditDueDate(e.target.value)}
-                  className="scheme-dark w-full rounded-lg border border-[#343941] bg-[#191C22] px-3 py-2 text-sm text-[#F4F4F5] outline-none transition-colors focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
+                  className="scheme-dark w-full rounded-lg border border-[#2B3040] bg-[#141821] px-3 py-2 text-sm text-[#F4F5F8] outline-none transition-colors focus:border-[#729EFF] focus:ring-2 focus:ring-blue-500/15"
                 />
               </div>
 
@@ -863,7 +918,7 @@ export default function ProjectPage() {
                   type="button"
                   onClick={() => setTaskToEdit(null)}
                   disabled={isUpdating}
-                  className="rounded-lg border border-[#343941] bg-[#191C22] px-4 py-2 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642]"
+                  className="rounded-lg border border-[#2B3040] bg-[#141821] px-4 py-2 text-sm font-medium text-[#F4F5F8] transition-colors hover:bg-[#202530]"
                 >
                   Cancel
                 </button>
@@ -871,7 +926,7 @@ export default function ProjectPage() {
                 <button
                   type="submit"
                   disabled={isUpdating || !editTaskName.trim()}
-                  className="rounded-lg bg-[#F4F4F5] px-4 py-2 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-lg bg-[#F4F5F8] px-4 py-2 text-sm font-semibold text-[#0F1117] transition-colors hover:bg-[#FFFFFF] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isUpdating ? "Saving" : "Save"}
                 </button>
@@ -879,20 +934,21 @@ export default function ProjectPage() {
             </form>
           </div>
         )}
+
         {labelTask && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-            <div className="w-full max-w-sm rounded-xl border border-[#343941] bg-[#22262E] p-6 shadow-2xl">
-              <h2 className="text-lg font-semibold text-[#F4F4F5]">
+            <div className="w-full max-w-sm rounded-xl border border-[#2B3040] bg-[#1A1E29] p-6 shadow-2xl">
+              <h2 className="text-lg font-semibold text-[#F4F5F8]">
                 Labels for "{labelTask.name}"
               </h2>
 
               <div className="mt-4">
-                <p className="mb-2 text-sm font-medium text-[#F4F4F5]">
+                <p className="mb-2 text-sm font-medium text-[#F4F5F8]">
                   Existing labels
                 </p>
 
                 {labels.length === 0 ? (
-                  <p className="text-sm text-gray-500">No labels yet.</p>
+                  <p className="text-sm text-[#858DA0]">No labels yet.</p>
                 ) : (
                   <div className="flex flex-wrap gap-2">
                     {labels.map((label) => {
@@ -910,15 +966,17 @@ export default function ProjectPage() {
                             }
                           }}
                           disabled={attached}
-                          className="rounded-full px-3 py-1 text-sm text-white disabled:opacity-40"
+                          className="rounded-full px-3 py-1 text-sm text-[#F4F5F8] disabled:opacity-40"
                           style={{
                             backgroundColor: label.color || "#6b7280",
+
                             color: getContrastTextColor(
                               label.color ?? "#6b7280",
                             ),
                           }}
                         >
                           {label.name}
+
                           {attached ? " ✓" : ""}
                         </button>
                       );
@@ -928,7 +986,7 @@ export default function ProjectPage() {
               </div>
 
               <form onSubmit={handleCreateLabel} className="mt-6 border-t pt-4">
-                <p className="mb-3 text-sm font-medium text-[#F4F4F5]">
+                <p className="mb-3 text-sm font-medium text-[#F4F5F8]">
                   Create new label
                 </p>
 
@@ -938,14 +996,14 @@ export default function ProjectPage() {
                     value={newLabelName}
                     onChange={(e) => setNewLabelName(e.target.value)}
                     placeholder="Label name"
-                    className="min-w-0 flex-1 rounded-lg border border-[#343941] bg-[#191C22] px-3 py-2 text-sm text-[#F4F4F5] placeholder:text-[#858B98] outline-none focus:border-[#626A79] focus:ring-2 focus:ring-[#626A79]/20"
+                    className="min-w-0 flex-1 rounded-lg border border-[#2B3040] bg-[#141821] px-3 py-2 text-sm text-[#F4F5F8] placeholder:text-[#858DA0] outline-none focus:border-[#729EFF] focus:ring-2 focus:ring-blue-500/15"
                   />
 
                   <input
                     type="color"
                     value={newLabelColor}
                     onChange={(e) => setNewLabelColor(e.target.value)}
-                    className="h-10 w-12 shrink-0 cursor-pointer rounded-lg border border-[#343941] bg-[#191C22] p-1"
+                    className="h-10 w-12 shrink-0 cursor-pointer rounded-lg border border-[#2B3040] bg-[#141821] p-1"
                   />
                 </div>
 
@@ -953,7 +1011,7 @@ export default function ProjectPage() {
                   <button
                     type="button"
                     onClick={() => setLabelTask(null)}
-                    className="rounded-lg border border-[#343941] bg-[#191C22] px-4 py-2 text-sm font-medium text-[#F4F4F5] transition-colors hover:bg-[#303642]"
+                    className="rounded-lg border border-[#2B3040] bg-[#141821] px-4 py-2 text-sm font-medium text-[#F4F5F8] transition-colors hover:bg-[#202530]"
                   >
                     Close
                   </button>
@@ -961,7 +1019,7 @@ export default function ProjectPage() {
                   <button
                     type="submit"
                     disabled={isCreatingLabel || !newLabelName.trim()}
-                    className="rounded-lg bg-[#F4F4F5] px-4 py-2 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#D4D4D8] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg bg-[#F4F5F8] px-4 py-2 text-sm font-semibold text-[#0F1117] transition-colors hover:bg-[#FFFFFF] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {isCreatingLabel ? "Creating..." : "Create label"}
                   </button>
